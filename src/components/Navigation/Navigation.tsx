@@ -1,0 +1,188 @@
+/** @jsxImportSource @emotion/react */
+import _ from "lodash";
+import React, { useRef } from "react";
+import styled from "@emotion/styled";
+import { useHorizontalScroll } from "../../hooks/useWheel";
+import theme from "../../styles/theme";
+import { FuncItem } from "../styled/Button/Button";
+import { useProportionHook } from "../../hooks/useWindowHooks";
+import { useWindowContext } from "../../Context/WindowContext";
+import { css } from "@emotion/react";
+import { useParams } from "react-router-dom";
+import { miniGames, sportsMenu } from "./navigationMenuList";
+import { SPORTS_TYPE } from "../../model/Streams.tsx";
+
+const NAVIGATION_SUMMARY_WIDTH = 0;
+const NAVIGATION_PADDING = 10;
+const SUMMARY_PADDING_LEFT = 10;
+const SUMMARY_PADDING_RIGHT = 20;
+const CONTAINER_PADDING = 10;
+const ITEM_GAP = 20;
+
+const MENU_LIST = (path: string) => {
+  switch (path) {
+    case "sports":
+      return sportsMenu;
+    case "mini":
+      return miniGames;
+    default:
+      return sportsMenu;
+  }
+};
+
+// index에 해당하는 item이 화면 중앙에 위치할 수 있는 scrollX 값을 얻어냅니다.
+const calculateScrollX = (
+  containerWidth: number,
+  itemWidthList: number[],
+  index: number,
+): number => {
+  const sum = _.sum(itemWidthList.slice(0, index).map((width) => width));
+  return (
+    // 현재 선택한 아이템이 위치해야할
+    sum +
+    ITEM_GAP +
+    // eslint-disable-next-line security/detect-object-injection
+    itemWidthList[index] -
+    (containerWidth - CONTAINER_PADDING * 2) / 2
+  );
+};
+
+interface MenuListType {
+  menu: string;
+  label: string;
+}
+
+interface NavigationPropsType {
+  className?: string;
+  menuList: MenuListType[];
+  activeMenu: SPORTS_TYPE;
+  setActiveMenu: React.Dispatch<React.SetStateAction<SPORTS_TYPE>>;
+}
+
+export function Navigation(props: NavigationPropsType) {
+  const { className, menuList, activeMenu, setActiveMenu } = props;
+  const { lastPath } = useParams();
+
+  const { windowWidth } = useWindowContext();
+
+  const ref = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  const navigationItemWidth = useProportionHook(
+    windowWidth,
+    140,
+    theme.windowSize.HD,
+  );
+
+  const { size } = useProportionHook(
+    windowWidth,
+    windowWidth - 50,
+    windowWidth - 50,
+  );
+
+  const itemWidthList = [
+    NAVIGATION_SUMMARY_WIDTH + 1 + SUMMARY_PADDING_LEFT + SUMMARY_PADDING_RIGHT,
+    ...MENU_LIST(lastPath ? lastPath : "sports").map(
+      () => navigationItemWidth.size + ITEM_GAP,
+    ),
+  ];
+
+  const scrollXValue = calculateScrollX(
+    size,
+    itemWidthList,
+    menuList.findIndex((row) => activeMenu === row.menu),
+  );
+  useHorizontalScroll(navRef);
+
+  return (
+    <Container ref={ref} width={size} className={className}>
+      <NavigationMover
+        onMouseLeave={() => {
+          navRef.current?.scrollTo({
+            left: scrollXValue,
+            top: 0,
+            behavior: "smooth",
+          });
+        }}
+        ref={navRef}
+      >
+        {/*<SummaryTab>*/}
+        {/*  <SummaryTitle>*/}
+        {/*    SPORTS*/}
+        {/*    /!*{lastPath?.toUpperCase()}*!/*/}
+        {/*  </SummaryTitle>*/}
+        {/*  <Divider />*/}
+        {/*</SummaryTab>*/}
+        <ActivityNavigation>
+          {menuList.map((row, index) => (
+            <React.Fragment key={index}>
+              <NavigationFuncItem
+                isActive={activeMenu === row.menu}
+                func={() => setActiveMenu(row.menu as SPORTS_TYPE)}
+                label={row.label}
+                width={navigationItemWidth.size}
+                justifyContent={
+                  theme.windowSize.mobile > windowWidth
+                    ? "center"
+                    : "flex-start"
+                }
+              />
+            </React.Fragment>
+          ))}
+        </ActivityNavigation>
+      </NavigationMover>
+    </Container>
+  );
+}
+
+const Container = styled.div<{ width: number }>(
+  ({ width }) => css`
+    width: ${width}px;
+    display: flex;
+    height: 60px;
+    padding: 0 ${CONTAINER_PADDING}px;
+    align-items: center;
+
+    border-radius: ${theme.borderRadius.softBox};
+    background: ${theme.defaultTheme.cardBackground};
+    position: relative;
+
+    overflow: hidden;
+  `,
+);
+
+const NavigationMover = styled.div`
+  display: flex;
+  position: relative;
+  z-index: 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const ActivityNavigation = styled.nav`
+  display: inline-flex;
+  padding: 0 ${NAVIGATION_PADDING}px;
+  align-items: center;
+  gap: ${ITEM_GAP}px;
+`;
+
+const NavigationFuncItem = styled(FuncItem)<{
+  width: number;
+  justifyContent: "center" | "flex-start";
+}>(
+  ({ width, justifyContent }) => css`
+    width: ${width}px;
+    align-items: center;
+    justify-content: ${justifyContent};
+    ${theme.flexLayout.row}
+    span {
+      padding: 0;
+      font-family: ${theme.fontStyle.sCoreDreamMedium};
+    }
+  `,
+);

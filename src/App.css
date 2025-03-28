@@ -1,0 +1,141 @@
+@font-face {
+    font-family: "Apple SD Gothic Neo Bold";
+    src: url("./assets/font/fonnts.com-Apple_SD_Gothic_Neo_Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream thin';
+    src: url('./assets/font/s-core-dream/SCDream1.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream extra light';
+    src: url('./assets/font/s-core-dream/SCDream2.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream light';
+    src: url('./assets/font/s-core-dream/SCDream3.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream regular';
+    src: url('./assets/font/s-core-dream/SCDream4.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream medium';
+    src: url('./assets/font/s-core-dream/SCDream5.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream bold';
+    src: url('./assets/font/s-core-dream/SCDream6.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream extra bold';
+    src: url('./assets/font/s-core-dream/SCDream7.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream heavy';
+    src: url('./assets/font/s-core-dream/SCDream8.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CORE-Dream black';
+    src: url('./assets/font/s-core-dream/SCDream9.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'KOPUB Batang light';
+    src: url('./assets/font/koPub/KoPub Batang_Pro Light.otf') format('opentype');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'KOPUB Batang medium';
+    src: url('./assets/font/koPub/KoPub Batang_Pro Medium.otf') format('opentype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'KOPUB Batang bold';
+    src: url('./assets/font/koPub/KoPub Batang_Pro Bold.otf') format('opentype');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'KOPUB Dotum light';
+    src: url('./assets/font/koPub/KoPub Dotum_Pro Light.otf') format('opentype');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'KOPUB Dotum medium';
+    src: url('./assets/font/koPub/KoPub Dotum_Pro Medium.otf') format('opentype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'KOPUB Dotum bold';
+    src: url('./assets/font/koPub/KoPub Dotum_Pro Bold.otf') format('opentype');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'YES Gothic bold';
+    src: url("./assets/font/yesGothic/YES24GothicB.otf") format("opentype");
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'YES Gothic extra bold';
+    src: url("./assets/font/yesGothic/YES24GothicEB.otf") format("opentype");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'YES Gothic medium';
+    src: url("./assets/font/yesGothic/YES24GothicM.otf") format("opentype");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'YES Gothic regular';
+    src: url("./assets/font/yesGothic/YES24GothicM.otf") format("opentype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'YES Gothic light';
+    src: url("./assets/font/yesGothic/YES24GothicM.otf") format("opentype");
+    font-weight: 300;
+}
+
+#root {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    position: absolute;
+    top: 0;
+}

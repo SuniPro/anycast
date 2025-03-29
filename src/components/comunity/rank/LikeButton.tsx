@@ -111,8 +111,6 @@ export function LikeButton(props: { rate: number; className?: string }) {
   const [count, setCount] = useState(rate);
   // const [countActive, setCountActive] = useState(false);
   const [isContainerHovered, setContainerHovered] = useState(false);
-  const numbers = [0];
-  const [_theArray, setTheArray] = useState(numbers);
 
   useEffect(() => {
     const sequence = async () => {
@@ -128,7 +126,6 @@ export function LikeButton(props: { rate: number; className?: string }) {
 
   const addEntryClick = () => {
     setCount(count + 1);
-    setTheArray((oldArray) => [...oldArray, oldArray.length]);
     // if (!countActive) {
     //   setCountActive(true);
     //   setCount(count + 1);
@@ -199,42 +196,10 @@ export function LikeButton(props: { rate: number; className?: string }) {
           isContainerHovered
             ? "#DD2E44"
             : count !== 0
-            ? ""
-            : `${theme.defaultTheme.textSecondary}`
+              ? ""
+              : `${theme.defaultTheme.textSecondary}`
         }
       />
-      {/*<LabelClipper className="labelClipper">*/}
-      {/*  <AnimatePresence>*/}
-      {/*    {theArray.map((number) => (*/}
-      {/*      <motion.div*/}
-      {/*        initial={{*/}
-      {/*          height: 0,*/}
-      {/*        }}*/}
-      {/*        animate={{*/}
-      {/*          height: "auto",*/}
-      {/*        }}*/}
-      {/*        transition={{*/}
-      {/*          height: {*/}
-      {/*            duration: 0.32,*/}
-      {/*          },*/}
-      {/*        }}*/}
-      {/*        className="label"*/}
-      {/*        key={number.toString()}*/}
-      {/*        data-value={number}*/}
-      {/*        css={css`*/}
-      {/*          color: ${isContainerHovered ? "#DD2E44" : "black"};*/}
-      {/*          font-size: 14px;*/}
-      {/*          transition: color 0.32s ease;*/}
-      {/*          transform: translateX(30%);*/}
-      {/*          width: 100px;*/}
-      {/*          font-weight: bold;*/}
-      {/*        `}*/}
-      {/*      >*/}
-      {/*        {count}*/}
-      {/*      </motion.div>*/}
-      {/*    ))}*/}
-      {/*  </AnimatePresence>*/}
-      {/*</LabelClipper>*/}
     </Container>
   );
 }

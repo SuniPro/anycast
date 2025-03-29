@@ -182,7 +182,7 @@ export const HeaderWrapper = styled.header`
 `;
 
 export const debounceHandler = debounce(
-  (value: string, callback: (value: string) => void) => {
+  (value: string, callback: (_value: string) => void) => {
     callback(value);
   },
   300, // 딜레이 시간(ms)
@@ -193,9 +193,12 @@ export function SearchBar(props: { width: number; height: number }) {
   const locate = useLocation();
   const { searchValue, setSearchValue } = useSearchContext();
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    debounceHandler(e.target.value, setSearchValue);
-  }, []);
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      debounceHandler(e.target.value, setSearchValue);
+    },
+    [setSearchValue],
+  );
 
   const inAuditorium = locate.pathname.includes("auditorium");
 

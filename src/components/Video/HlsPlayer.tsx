@@ -45,7 +45,7 @@ export function HlsPlayer(props: HlsPlayerType) {
         videoRef.current.src = sourceUrl;
       }
     }
-  }, [hlsPath, streamingPath]);
+  }, [autoPlay, hlsPath, streamingPath]);
 
   return (
     <video

@@ -1,9 +1,9 @@
-import { ScreenArea } from "../components/Auditorium/ScreenArea.tsx";
+import { ScreenArea } from "../components/Auditorium/ScreenArea";
 import { PageWrapper } from "../components/layouts/Frames/FrameLayouts";
 import { useWindowContext } from "../Context/WindowContext";
-import { getSportsStreamById } from "../api/streaming.tsx";
+import { getSportsStreamById } from "../api/streaming";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { SportsLeagueType } from "../model/Streams.tsx";
+import { SportsLeagueType } from "../model/Streams";
 import { useEffect, useState } from "react";
 import { ErrorAlert } from "../components/Alert/Alerts";
 
@@ -23,7 +23,7 @@ export function Auditorium() {
         setLeagueInfo(r);
       }
     });
-  }, [location]);
+  }, [id, location, navigate]);
 
   if (!leagueInfo) return;
 

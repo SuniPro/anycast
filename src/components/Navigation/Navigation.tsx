@@ -8,7 +8,7 @@ import { FuncItem } from "../styled/Button/Button";
 import { css } from "@emotion/react";
 import { useParams } from "react-router-dom";
 import { miniGames, sportsMenu } from "./navigationMenuList";
-import { SPORTS_TYPE } from "../../model/Streams.tsx";
+import { SPORTS_TYPE } from "../../model/Streams";
 
 const NAVIGATION_SUMMARY_WIDTH = 0;
 const NAVIGATION_PADDING = 10;

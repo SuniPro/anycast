@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-import theme from "../../styles/theme";
+import theme, { OPACITY_35 } from "../../styles/theme";
 import { Container } from "./Frames/FrameLayouts";
 import _ from "lodash";
 import { ReactNode } from "react";
@@ -113,7 +113,7 @@ export const ItemContainer = styled(Container)<{
   ({ activeScroll, gap, height }) => css`
     width: 100%;
     height: ${height ? `${height}px` : "100%"};
-    overflow-y: hidden;
+    overflow: hidden;
     flex-direction: row;
     flex-wrap: ${activeScroll ? "nowrap" : "wrap"};
     justify-content: flex-start;
@@ -154,9 +154,9 @@ export const Item = styled.div<{ width: number; height?: number }>(
     overflow: hidden;
 
     &:hover {
-      box-shadow: 2px 4px 16px ${theme.defaultTheme.contentBackground};
-      transform: scale3d(1.02, 1.02, 1.02);
-      //animation: tilt-shaking 0.3s infinite;
+      //box-shadow: 2px 4px 16px ${theme.defaultTheme.contentBackground};
+      transform: scale3d(1.01, 1.01, 1.01);
+      //animation: tilt-shaking 80ms 10ms;
     }
 
     @keyframes tilt-shaking {
@@ -164,13 +164,13 @@ export const Item = styled.div<{ width: number; height?: number }>(
         transform: rotate(0deg);
       }
       25% {
-        transform: rotate(2deg);
+        transform: rotate(0.5deg);
       }
       50% {
         transform: rotate(0deg);
       }
       75% {
-        transform: rotate(-2deg);
+        transform: rotate(-0.5deg);
       }
       100% {
         transform: rotate(0deg);
@@ -184,6 +184,7 @@ export const DescriptionLine = styled.div`
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+  cursor: pointer;
   ${theme.flexLayout.row};
 `;
 
@@ -364,3 +365,9 @@ const SkeletonPlaceholder = styled.span<{ width: number }>(
     }
   `,
 );
+
+export const HorizontalDivider = styled.div`
+  border-bottom: 1px solid ${theme.defaultTheme.textSecondary + OPACITY_35};
+  margin-top: 13px;
+  width: 100%;
+`;

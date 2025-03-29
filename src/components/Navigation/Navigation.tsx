@@ -5,12 +5,10 @@ import styled from "@emotion/styled";
 import { useHorizontalScroll } from "../../hooks/useWheel";
 import theme from "../../styles/theme";
 import { FuncItem } from "../styled/Button/Button";
-import { useProportionHook } from "../../hooks/useWindowHooks";
-import { useWindowContext } from "../../Context/WindowContext";
 import { css } from "@emotion/react";
 import { useParams } from "react-router-dom";
 import { miniGames, sportsMenu } from "./navigationMenuList";
-import { SPORTS_TYPE } from "../../model/Streams.tsx";
+import { SPORTS_TYPE } from "../../model/Streams";
 
 const NAVIGATION_SUMMARY_WIDTH = 0;
 const NAVIGATION_PADDING = 10;
@@ -54,48 +52,50 @@ interface MenuListType {
 
 interface NavigationPropsType {
   className?: string;
+  navigationItemWidth: number;
+  navigationContainerWidth: number;
   menuList: MenuListType[];
   activeMenu: SPORTS_TYPE;
   setActiveMenu: React.Dispatch<React.SetStateAction<SPORTS_TYPE>>;
+  justifyContent?: string;
 }
 
 export function Navigation(props: NavigationPropsType) {
-  const { className, menuList, activeMenu, setActiveMenu } = props;
+  const {
+    className,
+    navigationContainerWidth,
+    navigationItemWidth,
+    menuList,
+    activeMenu,
+    setActiveMenu,
+    justifyContent,
+  } = props;
   const { lastPath } = useParams();
-
-  const { windowWidth } = useWindowContext();
 
   const ref = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
-  const navigationItemWidth = useProportionHook(
-    windowWidth,
-    140,
-    theme.windowSize.HD,
-  );
-
-  const { size } = useProportionHook(
-    windowWidth,
-    windowWidth - 50,
-    windowWidth - 50,
-  );
-
   const itemWidthList = [
     NAVIGATION_SUMMARY_WIDTH + 1 + SUMMARY_PADDING_LEFT + SUMMARY_PADDING_RIGHT,
     ...MENU_LIST(lastPath ? lastPath : "sports").map(
-      () => navigationItemWidth.size + ITEM_GAP,
+      () => navigationItemWidth + ITEM_GAP,
     ),
   ];
 
   const scrollXValue = calculateScrollX(
-    size,
+    navigationContainerWidth,
     itemWidthList,
     menuList.findIndex((row) => activeMenu === row.menu),
   );
   useHorizontalScroll(navRef);
 
   return (
-    <Container ref={ref} width={size} className={className}>
+    <Container
+      ref={ref}
+      width={navigationContainerWidth}
+      className={className}
+      justifyContent={justifyContent}
+    >
       <NavigationMover
         onMouseLeave={() => {
           navRef.current?.scrollTo({
@@ -120,12 +120,8 @@ export function Navigation(props: NavigationPropsType) {
                 isActive={activeMenu === row.menu}
                 func={() => setActiveMenu(row.menu as SPORTS_TYPE)}
                 label={row.label}
-                width={navigationItemWidth.size}
-                justifyContent={
-                  theme.windowSize.mobile > windowWidth
-                    ? "center"
-                    : "flex-start"
-                }
+                width={navigationItemWidth}
+                justifyContent="center"
               />
             </React.Fragment>
           ))}
@@ -135,13 +131,14 @@ export function Navigation(props: NavigationPropsType) {
   );
 }
 
-const Container = styled.div<{ width: number }>(
-  ({ width }) => css`
+const Container = styled.div<{ width: number; justifyContent?: string }>(
+  ({ width, justifyContent }) => css`
     width: ${width}px;
     display: flex;
     height: 60px;
     padding: 0 ${CONTAINER_PADDING}px;
     align-items: center;
+    justify-content: ${justifyContent};
 
     border-radius: ${theme.borderRadius.softBox};
     background: ${theme.defaultTheme.cardBackground};
@@ -178,11 +175,12 @@ const NavigationFuncItem = styled(FuncItem)<{
   ({ width, justifyContent }) => css`
     width: ${width}px;
     align-items: center;
+    white-space: nowrap;
     justify-content: ${justifyContent};
+    font-family: ${theme.fontStyle.koPubDotumBold};
     ${theme.flexLayout.row}
     span {
       padding: 0;
-      font-family: ${theme.fontStyle.sCoreDreamMedium};
     }
   `,
 );

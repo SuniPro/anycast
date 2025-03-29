@@ -132,6 +132,77 @@
     font-weight: 300;
 }
 
+@font-face {
+    font-family: 'Futura Display';
+    src: url("./assets/font/FuturaDisplay.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'iBrand';
+    src: url("./assets/font/ibrand.otf") format("opentype");
+}
+
+@font-face {
+    font-family: 'GothamMedium';
+    src: url("./assets/font/Gotham-Medium.otf") format("opentype");
+}
+
+@font-face {
+    font-family: 'PicoBl';
+    src: url("./assets/font/pico/PICOBL__.TTF") format("truetype");
+}
+
+@font-face {
+    font-family: 'PicoW';
+    src: url("./assets/font/pico/PICOW___.TTF") format("truetype");
+}
+
+@font-face {
+    font-family: 'Trade Gothic LT Std Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Trade Gothic LT Std Regular'), url('./assets/font/trade/trade-gothic-lt-std-58a78e64434a9.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Trade Gothic LT Std Bold Condensed No. 20';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Trade Gothic LT Std Bold Condensed No. 20'), url('./assets/font/trade/trade-gothic-lt-std-bold-condensed-no-20-5872def1d27d8.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Catallina';
+    font-style: normal;
+    font-weight: normal;
+    src :url('./assets/font/CatallinaRostype/Catallina.otf') format('opentype');
+}
+
+
+@font-face {
+    font-family: 'Han Arum';
+    src: url("./assets/font/MapoPeacefull.otf") format("opentype");
+}
+
+html {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+html {
+    width: 100%;
+    height: 100%;
+
+    scrollbar-width: none;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+
+    body::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 #root {
     width: 100%;
     margin: 0 auto;

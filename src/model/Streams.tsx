@@ -6,8 +6,11 @@ import SportsHockeyIcon from "@mui/icons-material/SportsHockey";
 import SportsFootballIcon from "@mui/icons-material/SportsFootball";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import SportsHandballIcon from "@mui/icons-material/SportsHandball";
 
+import LolLogo from "../assets/image/lol_logo.png";
 import BasketBall from "../assets/image/basketBall.png";
+import HandBall from "../assets/image/handBall.png";
 import SoccerBall from "../assets/image/soccer-ball-svgrepo-com.png";
 import VolleyBall from "../assets/image/volleyball.png";
 import BaseBall from "../assets/image/baseball-svgrepo-com.png";
@@ -42,6 +45,8 @@ export const tagSelector = (
       return VolleyBall;
     case "HOCKEY":
       return Hockey;
+    case "HANDBALL":
+      return HandBall;
     case "FOOTBALL":
       return AmericanFootBall;
     case "ESPORTS":
@@ -51,8 +56,9 @@ export const tagSelector = (
         return LPLLogo;
       } else if (subType === "LWC") {
         return LWCLogo;
+      } else {
+        return LolLogo;
       }
-      return AnyCastLogo;
     default:
       return AnyCastLogo;
   }
@@ -66,6 +72,7 @@ export const SPORTS_ICON_LIST = [
   { type: "HOCKEY", icon: <SportsHockeyIcon /> },
   { type: "FOOTBALL", icon: <SportsFootballIcon /> },
   { type: "ESPORTS", icon: <SportsEsportsIcon /> },
+  { type: "HANDBALL", icon: <SportsHandballIcon /> },
   { type: "ETC", icon: <MoreHorizIcon /> },
 ];
 
@@ -79,8 +86,23 @@ export type SPORTS_TYPE =
   | "FOOTBALL"
   | "ESPORTS"
   | "TENNIS"
+  | "HANDBALL"
   | "UFC"
   | "ETC";
+
+export const STREAMING_MENU_LIST = [
+  { menu: "ALL", label: "ALL" },
+  { menu: "ESPORTS", label: "이스포츠" },
+  { menu: "SOCCER", label: "축구" },
+  { menu: "BASKETBALL", label: "농구" },
+  { menu: "BASEBALL", label: "야구" },
+  { menu: "VOLLEYBALL", label: "배구" },
+  { menu: "HOCKEY", label: "하키" },
+  { menu: "FOOTBALL", label: "미식축구" },
+  { menu: "HANDBALL", label: "핸드볼" },
+  { menu: "UFC", label: "UFC" },
+  { menu: "TENNIS", label: "테니스" },
+];
 
 export const SPORTS_TYPE_LIST = [
   "ALL",
@@ -91,6 +113,7 @@ export const SPORTS_TYPE_LIST = [
   "HOCKEY",
   "FOOTBALL",
   "ESPORTS",
+  "HANDBALL",
   "TENNIS",
   "UFC",
   "ETC",
@@ -107,7 +130,7 @@ export interface SportsLeagueType {
   id?: number;
   channelName: string;
   liveTitle: string;
-  thumbnailUrl: string;
+  thumbnailUrl: string | null;
   sportsType: SPORTS_TYPE;
   sportsTypeSub: string;
   leagueName: string;
@@ -117,6 +140,7 @@ export interface SportsLeagueType {
   homeName: string;
   awayName: string;
   important: boolean;
+  live: boolean;
   bettingList?: SportsLeagueBettingType[];
 }
 

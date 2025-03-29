@@ -1,26 +1,53 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import theme from "../../styles/theme";
-import { Logo } from "../logo/Logo";
+import { Logo } from "../Logo/Logo";
 import styled from "@emotion/styled";
-import { MessageCircleIcon, SearchIcon } from "../styled/icons";
+import { SearchIcon } from "../styled/icons";
 import { useWindowContext } from "../../Context/WindowContext";
 import { FuncIconItem } from "../styled/Button/Button";
-import { useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { useSearchContext } from "../../Context/SearchContext";
 import { debounce } from "lodash";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ErrorAlert } from "../Alert/Alerts";
+import { Modal } from "@mui/material";
+import { useProportionHook } from "../../hooks/useWindowHooks";
+import { ScreenInfo } from "../Auditorium/ScreenArea";
+import { useQuery } from "@tanstack/react-query";
+import { getAllLeague } from "../../api/streaming";
+import { HorizontalDivider } from "../layouts/Layouts";
 
 export function Header() {
   const { windowWidth } = useWindowContext();
-  const [active, setActive] = useState(false);
+  const [scheduleListOpen, setScheduleListOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const isDeskTop = windowWidth > theme.windowSize.tablet;
 
   return (
     <HeaderWrapper>
-      <LogoContainer width={35 * 1.3} height={50}>
-        <Logo width={35 * 1.3} height={35} />
+      <LogoContainer width={40 * 1.3} height={40} onClick={() => navigate("/")}>
+        {isDeskTop ? (
+          <span
+            css={css`
+              white-space: nowrap;
+              color: ${theme.colors.honeyHaze};
+              font-family: ${theme.fontStyle.poppins};
+              font-weight: 700;
+              font-size: 28px;
+              transform: translateY(0%);
+              letter-spacing: -0.07em;
+            `}
+          >
+            anycast
+          </span>
+        ) : (
+          <Logo width={40 * 1.3} height={40} />
+        )}
       </LogoContainer>
-      <SearchBar width={windowWidth / 3} height={35} />
+      <SearchBar width={windowWidth / 2} height={35} />
       <div
         css={css`
           display: flex;
@@ -36,22 +63,62 @@ export function Header() {
       >
         <li>
           <FuncIconItem
-            func={() => setActive((prev) => !prev)}
+            func={() => setScheduleListOpen((prev) => !prev)}
             icon={<EventNoteIcon />}
-            isActive={active}
-            label={<></>}
-          />
-        </li>
-        <li>
-          <FuncIconItem
-            func={() => setActive((prev) => !prev)}
-            icon={<MessageCircleIcon />}
-            isActive={active}
+            isActive={scheduleListOpen}
             label={<></>}
           />
         </li>
       </div>
+      <ScheduleListModal
+        open={scheduleListOpen}
+        close={() => setScheduleListOpen(false)}
+      />
     </HeaderWrapper>
+  );
+}
+
+export function ScheduleListModal(props: { open: boolean; close: () => void }) {
+  const { open, close } = props;
+
+  const { windowWidth } = useWindowContext();
+  const { size } = useProportionHook(
+    windowWidth,
+    1000,
+    theme.windowSize.tablet,
+  );
+
+  const { data: leagueList } = useQuery({
+    queryKey: ["getAllLeague"],
+    queryFn: () => getAllLeague(),
+    refetchInterval: 10000,
+  });
+  if (!leagueList) return;
+
+  const sortedLeagueList = leagueList.sort((a, b) => {
+    const aDate = new Date(a.leagueDate).getTime();
+    const bDate = new Date(b.leagueDate).getTime();
+    return bDate - aDate;
+  });
+
+  return (
+    <Modal
+      open={open}
+      onClose={close}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <>
+        <ModalContainer width={size}>
+          {sortedLeagueList.map((leagueInfo) => (
+            <>
+              <ScreenInfo leagueInfo={leagueInfo} dateSize={16} />
+              <HorizontalDivider />
+            </>
+          ))}
+        </ModalContainer>
+      </>
+    </Modal>
   );
 }
 
@@ -78,6 +145,9 @@ export const LogoContainer = styled.div<{ width: number; height: number }>(
   ({ width, height }) => css`
     width: ${width}px;
     height: ${height}px;
+    gap: 4px;
+    align-items: center;
+    ${theme.flexLayout.row}
   `,
 );
 
@@ -94,6 +164,7 @@ export const HeaderWrapper = styled.header`
   padding: 10px 2rem;
 
   ${theme.flexLayout.row}
+  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
 
@@ -108,18 +179,6 @@ export const HeaderWrapper = styled.header`
       padding: 0;
     }
   }
-
-  @media ${theme.deviceSize.phone} {
-    top: 0;
-    position: fixed;
-    width: 100%;
-    box-sizing: border-box;
-    ${theme.flexLayout.column}
-    ${theme.flexLayout.center}
-        ul {
-      margin-top: 10px;
-    }
-  }
 `;
 
 export const debounceHandler = debounce(
@@ -131,21 +190,47 @@ export const debounceHandler = debounce(
 
 export function SearchBar(props: { width: number; height: number }) {
   const { width, height } = props;
-  const { setSearchValue } = useSearchContext();
+  const locate = useLocation();
+  const { searchValue, setSearchValue } = useSearchContext();
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     debounceHandler(e.target.value, setSearchValue);
   }, []);
 
+  const inAuditorium = locate.pathname.includes("auditorium");
+
   return (
     <SearchContainer width={width} height={height}>
-      <SearchArea onChange={handleChange} type="text" placeholder="Search" />
+      <SearchArea
+        onChange={handleChange}
+        onClick={() => {
+          if (inAuditorium) {
+            ErrorAlert("검색 기능은 현재 메인화면에서만 동작합니다.");
+          }
+        }}
+        readOnly={inAuditorium}
+        type="text"
+        placeholder="Search"
+        isActive={searchValue.length !== 0}
+      />
       <SearchButton>
-        <SearchIcon width={30} height={30} />
+        <StyledSearchIcon
+          isActive={searchValue.length !== 0}
+          width={30}
+          height={30}
+        />
       </SearchButton>
     </SearchContainer>
   );
 }
+
+const StyledSearchIcon = styled(SearchIcon)<{ isActive: boolean }>(
+  ({ isActive }) => css`
+    path {
+      fill: ${isActive && theme.defaultTheme.hoverEffect} !important;
+    }
+  `,
+);
 
 const SearchContainer = styled.div<{ width: number; height: number }>(
   ({ width, height }) => css`
@@ -163,7 +248,7 @@ const SearchContainer = styled.div<{ width: number; height: number }>(
                 border: 0.3mm solid ${theme.defaultTheme.hoverEffect};
             }
 
-            svg {
+            svg > path {
                 fill: ${theme.defaultTheme.hoverEffect};
             }
 
@@ -201,13 +286,18 @@ const SearchContainer = styled.div<{ width: number; height: number }>(
     `,
 );
 
-const SearchArea = styled.input`
-  width: 100%;
-  height: 100%;
-  padding: 2px 10px;
-  border-radius: 18px;
-  border: 0.3mm solid ${theme.defaultTheme.textSecondary};
-`;
+const SearchArea = styled.input<{ isActive: boolean }>(
+  ({ isActive }) => css`
+    width: 100%;
+    height: 100%;
+    padding: 2px 10px;
+    border-radius: 18px;
+    border: 0.3mm solid
+      ${isActive
+        ? theme.defaultTheme.hoverEffect
+        : theme.defaultTheme.textSecondary};
+  `,
+);
 
 const SearchButton = styled.div`
   border-radius: 50%;
@@ -221,3 +311,27 @@ const SearchButton = styled.div`
 
   box-sizing: border-box;
 `;
+
+export const ModalContainer = styled.div<{ width: number }>(
+  ({ width }) => css`
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: ${width}px;
+    border: 3px solid ${theme.defaultTheme.buttonHoverBackground};
+    border-radius: ${theme.borderRadius.softBox};
+    box-shadow: 24px;
+    color: ${theme.defaultTheme.textPrimary};
+    background-color: ${theme.defaultTheme.cardBackground};
+    height: 60%;
+    overflow-x: visible;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  `,
+);

@@ -7,7 +7,7 @@ import { Streams } from "../components/streams/Streams";
 import { useWindowContext } from "../Context/WindowContext";
 import {
   getAllImportantSportsStreams,
-  getAllLeague,
+  getAllLeagueIsLive,
   getSportsStreamsByType,
 } from "../api/streaming";
 import { useQuery } from "@tanstack/react-query";
@@ -18,20 +18,8 @@ import {
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import theme from "../styles/theme";
-import { SPORTS_TYPE } from "../model/Streams";
-
-const MENU_LIST = [
-  { menu: "ALL", label: "ALL" },
-  { menu: "SOCCER", label: "축구" },
-  { menu: "BASKETBALL", label: "농구" },
-  { menu: "VOLLEYBALL", label: "배구" },
-  { menu: "BASEBALL", label: "야구" },
-  { menu: "HOCKEY", label: "하키" },
-  { menu: "FOOTBALL", label: "미식축구" },
-  { menu: "ESPORTS", label: "이스포츠" },
-  { menu: "UFC", label: "UFC" },
-  { menu: "TENNIS", label: "테니스" },
-];
+import { SPORTS_TYPE, STREAMING_MENU_LIST } from "../model/Streams";
+import { useProportionHook } from "../hooks/useWindowHooks";
 
 export function Main() {
   const { windowWidth } = useWindowContext();
@@ -51,21 +39,36 @@ export function Main() {
       : ["getSportsStreamsByType", activeMenu],
     queryFn: () =>
       isAllType
-        ? getAllLeague()
+        ? getAllLeagueIsLive()
         : getSportsStreamsByType(activeMenu as SPORTS_TYPE, 0, 20),
     refetchInterval: 10000,
     enabled: !!activeMenu, // 또는 필요 조건
   });
 
+  const navigationItemWidth = useProportionHook(
+    windowWidth,
+    140,
+    theme.windowSize.HD,
+  );
+
+  const navigationContainer = useProportionHook(
+    windowWidth,
+    windowWidth - 50,
+    windowWidth - 50,
+  );
+
   if (!leagueList) return;
 
   return (
     <Wrapper>
-      <PageWrapper width={windowWidth} gap={0}>
+      <PageWrapper width={windowWidth - 100} gap={0}>
         <Navigation
-          menuList={MENU_LIST}
+          menuList={STREAMING_MENU_LIST}
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
+          navigationItemWidth={navigationItemWidth.size}
+          navigationContainerWidth={navigationContainer.size}
+          justifyContent="center"
         />
         <ComponentContainer
           css={css`

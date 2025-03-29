@@ -23,7 +23,7 @@ export default defineConfig({
         ws: true,
       },
       "/streaming": {
-        target: "http://localhost:8070",
+        target: "http://192.168.88.220:8070",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/streaming/, ""),
         secure: false,

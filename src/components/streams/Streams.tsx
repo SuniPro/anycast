@@ -29,6 +29,8 @@ import theme from "../../styles/theme";
 
 import { StyledImage } from "../styled/Image/Image";
 import { EmptyPage } from "../styled/Empty/Empty";
+import Tooltip from "@mui/material/Tooltip";
+import { useSearchContext } from "../../Context/SearchContext";
 
 const MOVE_FACTOR = 2;
 const ITEM_GAP = 12;
@@ -42,16 +44,11 @@ export function Streams(props: {
   controls?: boolean;
   muted?: boolean;
 }) {
-  const {
-    viewPort,
-    leagueInfoList,
-    title,
-    titleView = true,
-    controls = true,
-    muted = false,
-  } = props;
+  const { viewPort, leagueInfoList, title, titleView = true } = props;
 
   const { windowWidth } = useWindowContext();
+  const { searchValue } = useSearchContext();
+
   const componentContainerRef = useRef<HTMLDivElement>(null);
   const [componentWidth, setComponentWidth] = useState<number>(
     componentContainerRef.current
@@ -97,6 +94,10 @@ export function Streams(props: {
 
   if (leagueInfoList.length === 0) return <EmptyPage />;
 
+  const filteredLeagueInfoList = leagueInfoList.filter((league) =>
+    league.liveTitle.includes(searchValue),
+  );
+
   return (
     <ComponentContainer ref={componentContainerRef}>
       {titleView && (
@@ -111,76 +112,48 @@ export function Streams(props: {
         </MainTitleLine>
       )}
       <ExhibitionContainer
-        width={isTablet ? itemWidth : componentWidth}
+        width={isTablet ? itemWidth * 1.03 : componentWidth}
         ref={containerRef}
         activeScroll={!!viewPort}
       >
-        <ItemContainer activeScroll={!!viewPort} gap={ITEM_GAP}>
-          {leagueInfoList.map((league, index) => (
-            <ItemCase>
-              <StyledItem key={index} width={itemWidth} isMain={!!viewPort}>
-                <HlsPlayer
-                  controls={controls}
-                  hlsPath={league.streamUrl}
-                  hlsPathSub={league.streamUrlSub}
-                  width={itemWidth}
-                  height={itemHeight}
-                  muted={muted}
-                />
-              </StyledItem>
-              <DescriptionLine>
-                <div
-                  css={css`
-                    width: 10%;
-                    margin-right: 10px;
-                  `}
-                >
-                  <StyledImage
-                    imageUrl={
-                      league.thumbnailUrl
-                        ? league.thumbnailUrl
-                        : tagSelector(
-                            league.streamUrl,
-                            league.sportsType,
-                            league.sportsTypeSub,
-                          )
-                    }
-                    size={{
-                      width: 40,
-                      height: 40,
-                    }}
-                    css={css`
-                      background-size: 40px;
-                      border-radius: ${theme.borderRadius.roundedBox};
-                    `}
-                  />
-                </div>
-                <div
-                  css={css`
-                    width: 90%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                  `}
-                >
-                  <StyledEllipsisCase
-                    width={itemWidth - 50}
-                    text={league.liveTitle}
-                    testAlign="left"
-                  />
-                  <ItemDescription>{league.channelName}</ItemDescription>
-                  <ItemDescription>
-                    {iso8601ToYYMMDDHHMM(league.leagueDate)}
-                  </ItemDescription>
-                </div>
-              </DescriptionLine>
-            </ItemCase>
-          ))}
-        </ItemContainer>
+        {searchValue.length !== 0 && (
+          <ContentsArea
+            leagueList={filteredLeagueInfoList}
+            isView={true}
+            activeScroll={false}
+            itemWidth={itemWidth}
+            itemHeight={itemHeight}
+          />
+        )}
+        <ContentsArea
+          leagueList={leagueInfoList}
+          activeScroll={!!viewPort}
+          itemWidth={itemWidth}
+          itemHeight={itemHeight}
+          isView={searchValue.length === 0}
+        />
       </ExhibitionContainer>
     </ComponentContainer>
   );
 }
+
+const InfoLine = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+
+const ProfileCase = styled.div`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+`;
+
+const Profile = styled(StyledImage)`
+  background-size: 40px;
+  border-radius: ${theme.borderRadius.roundedBox};
+`;
 
 const StyledEllipsisCase = styled(EllipsisCase)`
   font-family: ${theme.defaultTheme.font.component.itemTitle};
@@ -193,5 +166,81 @@ const StyledItem = styled(Item)<{ isMain: boolean }>(
     position: relative;
 
     overflow: hidden;
+  `,
+);
+
+function ContentsArea(props: {
+  leagueList: SportsLeagueType[];
+  isView: boolean;
+  activeScroll: boolean;
+  itemWidth: number;
+  itemHeight: number;
+}) {
+  const { leagueList, activeScroll, itemWidth, itemHeight, isView } = props;
+  const navigate = useNavigate();
+
+  return (
+    <VisualItemContainer
+      activeScroll={activeScroll}
+      gap={ITEM_GAP}
+      isView={isView}
+    >
+      {leagueList.map((league, index) => (
+        <Tooltip
+          title="제목을 누르면 극장모드로 볼 수 있어요 !"
+          placement="top"
+        >
+          <ItemCase>
+            <StyledItem key={index} width={itemWidth} isMain={activeScroll}>
+              <HlsPlayer
+                controls={true}
+                hlsPath={league.streamUrl}
+                hlsPathSub={league.streamUrlSub}
+                width={itemWidth}
+                height={itemHeight}
+                muted={true}
+              />
+            </StyledItem>
+            <DescriptionLine
+              onClick={() => navigate(`auditorium/${league.id}`)}
+            >
+              <ProfileCase>
+                <Profile
+                  imageUrl={
+                    league.thumbnailUrl
+                      ? league.thumbnailUrl
+                      : tagSelector(
+                          league.streamUrl,
+                          league.sportsType,
+                          league.sportsTypeSub,
+                        )
+                  }
+                  size={{
+                    width: 40,
+                    height: 40,
+                  }}
+                />
+              </ProfileCase>
+              <InfoLine>
+                <StyledEllipsisCase
+                  width={itemWidth - 50}
+                  text={league.liveTitle}
+                  testAlign="left"
+                />
+                <ItemDescription>{league.channelName}</ItemDescription>
+                <ItemDescription>
+                  {iso8601ToYYMMDDHHMM(league.leagueDate)}
+                </ItemDescription>
+              </InfoLine>
+            </DescriptionLine>
+          </ItemCase>
+        </Tooltip>
+      ))}
+    </VisualItemContainer>
+  );
+}
+const VisualItemContainer = styled(ItemContainer)<{ isView: boolean }>(
+  ({ isView }) => css`
+    visibility: ${isView ? "visible" : "hidden"};
   `,
 );

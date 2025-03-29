@@ -122,25 +122,6 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
   );
 }
 
-export const HeaderRightFuncUnorderedList = styled.ul<{
-  size: { width: number; height: number };
-}>(
-  ({ size }) => css`
-    font-family: ${theme.defaultTheme.font.header.menuItem};
-    ${theme.flexLayout.row}
-    justify-content: space-evenly;
-
-    svg {
-      width: ${size.width}px;
-      height: ${size.height}px;
-    }
-
-    button {
-      height: 100%;
-    }
-  `,
-);
-
 export const LogoContainer = styled.div<{ width: number; height: number }>(
   ({ width, height }) => css`
     width: ${width}px;

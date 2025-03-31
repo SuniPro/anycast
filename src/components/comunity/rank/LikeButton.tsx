@@ -196,8 +196,8 @@ export function LikeButton(props: { rate: number; className?: string }) {
           isContainerHovered
             ? "#DD2E44"
             : count !== 0
-            ? ""
-            : `${theme.defaultTheme.textSecondary}`
+              ? ""
+              : `${theme.defaultTheme.textSecondary}`
         }
       />
     </Container>
@@ -258,7 +258,6 @@ const Container = styled(motion.div)`
   width: 30px;
   position: relative;
   /* background: rgba(255, 255, 255, 0.05); */
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: start;

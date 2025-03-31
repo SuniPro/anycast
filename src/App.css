@@ -175,7 +175,7 @@
     font-family: 'Catallina';
     font-style: normal;
     font-weight: normal;
-    src :url('./assets/font/CatallinaRostype/Catallina.otf') format('opentype');
+    src: url('./assets/font/CatallinaRostype/Catallina.otf') format('opentype');
 }
 
 
@@ -201,6 +201,22 @@ html {
     body::-webkit-scrollbar {
         display: none;
     }
+}
+
+body {
+    cursor : none;
+}
+
+button {
+    cursor: none;
+}
+
+input {
+    cursor :none;
+}
+
+select {
+    cursor :none;
 }
 
 #root {

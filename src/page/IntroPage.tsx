@@ -77,9 +77,6 @@ function TitleWrapper(props: {
             height={120}
             viewBox="0 0 29 23"
             version="1.1"
-            css={css`
-              cursor: pointer;
-            `}
           >
             <defs>
               <filter id="glitchFilter">

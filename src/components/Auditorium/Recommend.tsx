@@ -186,7 +186,9 @@ const ContentsLine = styled.div`
   justify-content: space-between;
   align-items: flex-start;
 
-  cursor: pointer;
+  cursor:
+    url("../Logo/anyCast-logo-small.svg") 2 2,
+    auto;
 
   gap: 8px;
   ${theme.flexLayout.row}

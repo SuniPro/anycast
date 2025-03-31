@@ -133,6 +133,7 @@ export function Navigation(props: NavigationPropsType) {
 
 const Container = styled.div<{ width: number; justifyContent?: string }>(
   ({ width, justifyContent }) => css`
+    cursor: none;
     width: ${width}px;
     display: flex;
     height: 60px;

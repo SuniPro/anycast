@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SearchContextProvider } from "./Context/SearchContext";
 import { Auditorium } from "./page/Auditorium";
 import { Toaster } from "react-hot-toast";
+import { Cursor } from "./utils/cursor/Cursor";
+import { CursorProvider } from "./Context/CursorContext";
 
 const QUERY_CLIENT = new QueryClient();
 
@@ -16,11 +18,14 @@ function App() {
       <WindowContextProvider>
         <SearchContextProvider>
           <BrowserRouter>
-            <Header />
-            <Routes>
-              <Route path="/" element={<Main />} />
-              <Route path="auditorium/:id?" element={<Auditorium />} />
-            </Routes>
+            <CursorProvider>
+              <Header />
+              <Routes>
+                <Route path="/" element={<Main />} />
+                <Route path="auditorium/:id?" element={<Auditorium />} />
+              </Routes>
+              <Cursor />
+            </CursorProvider>
           </BrowserRouter>
           <Toaster />
         </SearchContextProvider>

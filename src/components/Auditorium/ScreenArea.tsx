@@ -16,6 +16,7 @@ import { RecommendArea } from "./Recommend";
 import { StyledImage } from "../styled/Image/Image";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { LikeButton } from "../comunity/rank/LikeButton";
+import { useCursor } from "../../Context/CursorContext";
 
 const SECTION_GAP = 20;
 export const SCREEN_CONTAINER_PADDING = 30;
@@ -159,6 +160,7 @@ export function ScreenInfo(props: {
   dateSize?: number;
 }) {
   const { leagueInfo, dateSize } = props;
+  const { setIsLike } = useCursor();
 
   const type = STREAMING_MENU_LIST.find(
     (type) => type.menu === (leagueInfo.sportsType as SPORTS_TYPE),
@@ -271,7 +273,12 @@ export function ScreenInfo(props: {
               <TagBox isLive={false}>주요경기</TagBox>
             ) : null}
             {leagueInfo.live ? <TagBox isLive={true}>LIVE</TagBox> : null}
-            <LikeButton rate={0} />
+            <div
+              onMouseEnter={() => setIsLike(true)}
+              onMouseLeave={() => setIsLike(false)}
+            >
+              <LikeButton rate={0} />
+            </div>
           </ul>
         </div>
       </div>

@@ -75,7 +75,6 @@ export const MainTitleLine = styled.div`
 export const MainTitle = styled.h2`
   font-family: ${theme.defaultTheme.font.component.mainTitle};
   color: ${theme.defaultTheme.textPrimary};
-  cursor: pointer;
 `;
 
 export const ControlBox = styled.div`
@@ -184,7 +183,6 @@ export const DescriptionLine = styled.div`
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  cursor: pointer;
   ${theme.flexLayout.row};
 `;
 
@@ -199,7 +197,6 @@ export const ItemTitle = styled.span`
   font-weight: 600;
   font-size: 16px;
   margin: 0;
-  cursor: pointer;
   text-align: left;
 `;
 
@@ -215,7 +212,6 @@ export const ItemDescription = styled.span`
   font-weight: 600;
   font-size: 14px;
   margin: 0;
-  cursor: pointer;
   text-align: left;
 `;
 

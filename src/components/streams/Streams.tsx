@@ -34,6 +34,7 @@ import { StyledImage } from "../styled/Image/Image";
 import { EmptyPage } from "../styled/Empty/Empty";
 import Tooltip from "@mui/material/Tooltip";
 import { useSearchContext } from "../../Context/SearchContext";
+import { useCursor } from "../../Context/CursorContext";
 
 const MOVE_FACTOR = 2;
 const ITEM_GAP = 12;
@@ -185,6 +186,8 @@ function ContentsArea(props: {
   itemHeight: number;
 }) {
   const { leagueList, activeScroll, itemWidth, itemHeight, isView } = props;
+
+  const { setIsPointer } = useCursor();
   const navigate = useNavigate();
 
   return (
@@ -210,6 +213,8 @@ function ContentsArea(props: {
               />
             </StyledItem>
             <DescriptionLine
+              onMouseEnter={() => setIsPointer(true)}
+              onMouseLeave={() => setIsPointer(false)}
               onClick={() => navigate(`auditorium/${league.id}`)}
             >
               <ProfileCase>

@@ -133,6 +133,7 @@ export function Navigation(props: NavigationPropsType) {
 
 const Container = styled.div<{ width: number; justifyContent?: string }>(
   ({ width, justifyContent }) => css`
+    cursor: none;
     width: ${width}px;
     display: flex;
     height: 60px;
@@ -145,6 +146,10 @@ const Container = styled.div<{ width: number; justifyContent?: string }>(
     position: relative;
 
     overflow: hidden;
+
+    button:hover {
+      border-color: ${theme.defaultTheme.buttonHoverBackground};
+    }
   `,
 );
 

@@ -9,7 +9,6 @@ import theme, { OPACITY_35 } from "../../styles/theme";
 import { useProportionHook } from "../../hooks/useWindowHooks";
 import { SCREEN_CONTAINER_PADDING } from "./ScreenArea";
 import { ASPECT_RATIO } from "../layouts/Layouts";
-import { HlsPlayer } from "../Video/HlsPlayer";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -18,6 +17,7 @@ import {
 } from "../../api/streaming";
 import { EmptyPage } from "../styled/Empty/Empty";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
+import { ThumbnailViewer } from "../Video/ThumbnailViewer";
 
 const NAVIGATION_PADDING = 10;
 
@@ -105,14 +105,11 @@ export function RecommendArea(props: ActiveMenuStateType) {
                 onClick={() => navigate(`/auditorium/${league.id}`)}
               >
                 <Contents width={contentsWidth} height={contentsHeight}>
-                  <HlsPlayer
-                    hlsPath={league.streamUrl}
-                    hlsPathSub={league.streamUrlSub}
+                  <ThumbnailViewer
+                    sourceUrl={league.streamUrl}
                     width={contentsWidth}
                     height={contentsHeight}
                     muted={true}
-                    controls={false}
-                    autoPlay={true}
                   />
                 </Contents>
                 <ContentsDescriptionLine>

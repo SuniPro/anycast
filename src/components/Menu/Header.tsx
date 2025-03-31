@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import theme from "../../styles/theme";
-import { LogoIcon } from "../Logo/LogoIcon";
+import { LogoIcon, LogoText } from "../Logo/LogoIcon";
 import styled from "@emotion/styled";
 import { SearchIcon } from "../styled/icons";
 import { useWindowContext } from "../../Context/WindowContext";
@@ -29,23 +29,7 @@ export function Header() {
   return (
     <HeaderWrapper>
       <LogoContainer width={40 * 1.3} height={40} onClick={() => navigate("/")}>
-        {isDeskTop ? (
-          <span
-            css={css`
-              white-space: nowrap;
-              color: ${theme.colors.honeyHaze};
-              font-family: ${theme.fontStyle.poppins};
-              font-weight: 700;
-              font-size: 28px;
-              transform: translateY(0%);
-              letter-spacing: -0.07em;
-            `}
-          >
-            anycast
-          </span>
-        ) : (
-          <LogoIcon width={40 * 1.3} height={40} />
-        )}
+        {isDeskTop ? <LogoText /> : <LogoIcon width={40 * 1.3} height={40} />}
       </LogoContainer>
       <SearchBar width={windowWidth / 2} height={35} />
       <div

@@ -5,8 +5,25 @@ import theme from "../../styles/theme";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 
+export function LogoText(props: { fontSize?: number }) {
+  const { fontSize = 28 } = props;
+  return <LogoTextCase fontSize={fontSize}>anycast</LogoTextCase>;
+}
+
+const LogoTextCase = styled.span<{ fontSize: number }>(
+  ({}) => css`
+    white-space: nowrap;
+    color: ${theme.colors.honeyHaze};
+    font-family: ${theme.fontStyle.poppins};
+    font-weight: 700;
+    font-size: 28px;
+    transform: translateY(0%);
+    letter-spacing: -0.07em;
+  `,
+);
+
 /** Logo의 크기는 1.3 : 1 width, height의 비율을 가지고 있습니다. 사용할때 해당 비율 참고해서 사용바랍니다. */
-export function Logo(props: {
+export function LogoIcon(props: {
   className?: string;
   width?: number;
   height?: number;

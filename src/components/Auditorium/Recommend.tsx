@@ -18,6 +18,7 @@ import {
 import { EmptyPage } from "../styled/Empty/Empty";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { ThumbnailViewer } from "../Video/ThumbnailViewer";
+import { HlsPlayer } from "../Video/HlsPlayer";
 
 const NAVIGATION_PADDING = 10;
 
@@ -105,12 +106,26 @@ export function RecommendArea(props: ActiveMenuStateType) {
                 onClick={() => navigate(`/auditorium/${league.id}`)}
               >
                 <Contents width={contentsWidth} height={contentsHeight}>
-                  <ThumbnailViewer
-                    sourceUrl={league.streamUrl}
-                    width={contentsWidth}
-                    height={contentsHeight}
-                    muted={true}
-                  />
+                  {league.sportsTypeSub === "BJLOL" ? (
+                    <HlsPlayer
+                      hlsPath={league.streamUrl}
+                      hlsPathSub={league.streamUrl}
+                      width={contentsWidth}
+                      height={contentsHeight}
+                      muted={true}
+                      controls={false}
+                    />
+                  ) : (
+                    <ThumbnailViewer
+                      hlsPath={league.streamUrl}
+                      width={contentsWidth}
+                      height={contentsHeight}
+                      muted={true}
+                      // hlsPathSub={league.streamUrl}
+                      // muted={true}
+                      // controls={false}
+                    />
+                  )}
                 </Contents>
                 <ContentsDescriptionLine>
                   <ContentsTitle>{league.liveTitle}</ContentsTitle>

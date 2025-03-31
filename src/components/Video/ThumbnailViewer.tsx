@@ -6,13 +6,13 @@ import Hls from "hls.js";
  * autoPlay와 control을 false 로 첫 프레임을 썸네일로 만들어주는 원리입니다.
  * */
 export function ThumbnailViewer(props: {
-  sourceUrl: string;
+  hlsPath: string;
   muted: boolean;
   width: number;
   height: number;
   className?: string;
 }) {
-  const { className, sourceUrl, muted, width, height } = props;
+  const { className, hlsPath, muted, width, height } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -35,16 +35,16 @@ export function ThumbnailViewer(props: {
           }
         });
 
-        hls.loadSource(sourceUrl); // 비디오 소스 로드
+        hls.loadSource(hlsPath); // 비디오 소스 로드
         hls.attachMedia(videoRef.current); // 비디오 요소에 연결
       } else if (
         videoRef.current.canPlayType("application/vnd.apple.mpegurl")
       ) {
         // Safari에서 기본적으로 HLS 지원
-        videoRef.current.src = sourceUrl;
+        videoRef.current.src = hlsPath;
       }
     }
-  }, [sourceUrl]);
+  }, [hlsPath]);
 
   return (
     <video

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import theme from "../../styles/theme";
-import { Logo } from "../Logo/Logo";
+import { LogoIcon } from "../Logo/LogoIcon";
 import styled from "@emotion/styled";
 import { SearchIcon } from "../styled/icons";
 import { useWindowContext } from "../../Context/WindowContext";
@@ -44,7 +44,7 @@ export function Header() {
             anycast
           </span>
         ) : (
-          <Logo width={40 * 1.3} height={40} />
+          <LogoIcon width={40 * 1.3} height={40} />
         )}
       </LogoContainer>
       <SearchBar width={windowWidth / 2} height={35} />

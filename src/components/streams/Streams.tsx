@@ -4,7 +4,10 @@ import styled from "@emotion/styled";
 import { SportsLeagueType, tagSelector } from "../../model/Streams";
 import { useWindowContext } from "../../Context/WindowContext";
 import { useItemScrollControls } from "../../hooks/useWheel";
-import { ComponentContainer } from "../layouts/Frames/FrameLayouts";
+import {
+  ComponentContainer,
+  PageWrapper,
+} from "../layouts/Frames/FrameLayouts";
 import {
   ASPECT_RATIO,
   ControlBox,
@@ -92,7 +95,12 @@ export function Streams(props: {
     });
   }, [scrollXValue]);
 
-  if (leagueInfoList.length === 0) return <EmptyPage />;
+  if (leagueInfoList.length === 0)
+    return (
+      <PageWrapper width={windowWidth}>
+        <EmptyPage />
+      </PageWrapper>
+    );
 
   const filteredLeagueInfoList = leagueInfoList.filter((league) =>
     league.liveTitle.includes(searchValue),

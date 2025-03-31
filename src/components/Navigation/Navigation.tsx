@@ -146,6 +146,10 @@ const Container = styled.div<{ width: number; justifyContent?: string }>(
     position: relative;
 
     overflow: hidden;
+
+    button:hover {
+      border-color: ${theme.defaultTheme.buttonHoverBackground};
+    }
   `,
 );
 

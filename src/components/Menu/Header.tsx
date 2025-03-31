@@ -18,17 +18,25 @@ import { ScreenInfo } from "../Auditorium/ScreenArea";
 import { useQuery } from "@tanstack/react-query";
 import { getAllLeague } from "../../api/streaming";
 import { HorizontalDivider } from "../layouts/Layouts";
+import { useCursor } from "../../Context/CursorContext";
 
 export function Header() {
   const { windowWidth } = useWindowContext();
   const [scheduleListOpen, setScheduleListOpen] = useState(false);
   const navigate = useNavigate();
+  const { setIsPointer } = useCursor();
 
   const isDeskTop = windowWidth > theme.windowSize.tablet;
 
   return (
     <HeaderWrapper>
-      <LogoContainer width={40 * 1.3} height={40} onClick={() => navigate("/")}>
+      <LogoContainer
+        onMouseEnter={() => setIsPointer(true)}
+        onMouseLeave={() => setIsPointer(false)}
+        width={40 * 1.3}
+        height={40}
+        onClick={() => navigate("/")}
+      >
         {isDeskTop ? <LogoText /> : <LogoIcon width={40 * 1.3} height={40} />}
       </LogoContainer>
       <SearchBar width={windowWidth / 2} height={35} />

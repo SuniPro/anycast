@@ -271,8 +271,7 @@ const SearchContainer = styled.div<{
 
         &:hover {
             input {
-                border: 2px solid
-                ${theme.mode.hoverEffect};
+                border: 2px solid ${theme.mode.hoverEffect};
             }
 
             svg > path {
@@ -286,8 +285,7 @@ const SearchContainer = styled.div<{
 
         &:active {
             input {
-                border: 2px solid
-                ${theme.mode.hoverEffect};
+                border: 2px solid ${theme.mode.hoverEffect};
             }
 
             svg {
@@ -301,8 +299,7 @@ const SearchContainer = styled.div<{
 
         &:focus {
             input {
-                border: 2px solid
-                ${theme.mode.hoverEffect};
+                border: 2px solid ${theme.mode.hoverEffect};
             }
 
             svg {

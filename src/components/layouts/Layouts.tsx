@@ -234,6 +234,7 @@ export const ProfileCase = styled.div`
 
 export const Profile = styled(StyledImage)<{ theme: Theme }>(
   ({ theme }) => css`
+    background-color: ${theme.colors.white};
     background-size: 40px;
     border-radius: ${theme.borderRadius.roundedBox};
   `,

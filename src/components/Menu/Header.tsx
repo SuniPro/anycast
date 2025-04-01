@@ -34,12 +34,13 @@ export function Header(props: {
   };
 }) {
   const { darkMode, setDarkMode } = props.darkState;
-  const theme = useTheme();
 
+  const theme = useTheme();
   const { windowWidth } = useWindowContext();
   const { setIsPointer } = useCursor();
-  const [scheduleListOpen, setScheduleListOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [scheduleListOpen, setScheduleListOpen] = useState(false);
 
   const isDeskTop = windowWidth > theme.windowSize.tablet;
 

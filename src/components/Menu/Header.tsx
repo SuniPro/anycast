@@ -10,6 +10,7 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import { useSearchContext } from "../../Context/SearchContext";
@@ -22,10 +23,10 @@ import { ErrorAlert } from "../Alert/Alerts";
 import { Modal } from "@mui/material";
 import { useProportionHook } from "../../hooks/useWindowHooks";
 import { ScreenInfo } from "../Auditorium/ScreenArea";
-import { useQuery } from "@tanstack/react-query";
 import { getAllLeague } from "../../api/streaming";
 import { HorizontalDivider } from "../layouts/Layouts";
 import { useCursor } from "../../Context/CursorContext";
+import { SportsLeagueType } from "../../model/Streams";
 
 export function Header(props: {
   darkState: {
@@ -105,21 +106,18 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
   const { open, close } = props;
   const theme = useTheme();
 
+  const [leagueList, setLeagueList] = useState<SportsLeagueType[]>();
+
+  useEffect(() => {
+    getAllLeague().then((leagueList) => setLeagueList(leagueList));
+  }, []);
+
   const { windowWidth } = useWindowContext();
-  const { size } = useProportionHook(
-    windowWidth,
-    1000,
-    theme.windowSize.tablet,
-  );
+  const { size } = useProportionHook(windowWidth, 700, theme.windowSize.tablet);
 
-  const { data: leagueList } = useQuery({
-    queryKey: ["getAllLeague"],
-    queryFn: () => getAllLeague(),
-    refetchInterval: 10000,
-  });
-  if (!leagueList) return;
+  const isMobile = windowWidth <= theme.windowSize.mobile;
 
-  const sortedLeagueList = leagueList.sort((a, b) => {
+  const sortedLeagueList = leagueList?.sort((a, b) => {
     const aDate = new Date(a.leagueDate).getTime();
     const bDate = new Date(b.leagueDate).getTime();
     return bDate - aDate;
@@ -134,9 +132,12 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
     >
       <>
         <ModalContainer width={size} theme={theme}>
-          {sortedLeagueList.map((leagueInfo) => (
+          {sortedLeagueList?.map((leagueInfo) => (
             <>
-              <ScreenInfo leagueInfo={leagueInfo} dateSize={16} />
+              <ScreenInfo
+                leagueInfo={leagueInfo}
+                dateSize={isMobile ? 12 : 16}
+              />
               <HorizontalDivider theme={theme} />
             </>
           ))}

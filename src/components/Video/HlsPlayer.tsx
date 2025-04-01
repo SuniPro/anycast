@@ -1,5 +1,7 @@
 import Hls from "hls.js";
 import { useEffect, useRef } from "react";
+import styled from "@emotion/styled";
+import { css, Theme, useTheme } from "@emotion/react";
 
 interface HlsPlayerType {
   className?: string;
@@ -23,6 +25,7 @@ export function HlsPlayer(props: HlsPlayerType) {
     autoPlay = true,
   } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
+  const theme = useTheme();
 
   const streamingPath = import.meta.env.VITE_STREAMING_SERVER_PREFIX;
 
@@ -48,7 +51,7 @@ export function HlsPlayer(props: HlsPlayerType) {
   }, [autoPlay, hlsPath, streamingPath]);
 
   return (
-    <video
+    <StyledVideo
       className={className}
       ref={videoRef}
       controls={controls}
@@ -56,7 +59,76 @@ export function HlsPlayer(props: HlsPlayerType) {
       muted={muted}
       width={width}
       height={height}
-      style={{ backgroundColor: "black" }}
+      theme={theme}
     />
   );
 }
+
+// noinspection CssInvalidPseudoSelector
+const StyledVideo = styled.video<{ theme: Theme }>(
+  ({ theme }) => css`
+    background-color: ${theme.colors.black};
+
+    cursor: none;
+
+    &::-webkit-media-controls-timeline {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-panel {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-play-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-volume-slider-container {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-volume-slider {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-mute-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-current-time-display {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-fullscreen-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-rewind-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-return-to-realtime-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-toggle-closed-captions-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-timeline-container {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-seek-back-button {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-time-remaining-display {
+      cursor: none;
+    }
+
+    &::-webkit-media-controls-panel {
+      cursor: none;
+    }
+  `,
+);

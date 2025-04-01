@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
+    port: 5170,
     proxy: {
       // 첫 번째 프록시 설정
       "/api": {
@@ -23,7 +24,7 @@ export default defineConfig({
         ws: true,
       },
       "/streaming": {
-        target: "http://192.168.88.220:8070",
+        target: "http://192.168.110.72:8070",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/streaming/, ""),
         secure: false,

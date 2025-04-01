@@ -34,8 +34,9 @@ export function Header(props: {
   };
 }) {
   const { darkMode, setDarkMode } = props.darkState;
-  const { windowWidth } = useWindowContext();
   const theme = useTheme();
+
+  const { windowWidth } = useWindowContext();
   const { setIsPointer } = useCursor();
   const [scheduleListOpen, setScheduleListOpen] = useState(false);
   const navigate = useNavigate();

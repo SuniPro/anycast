@@ -251,7 +251,7 @@ const darkMode = {
   inputBackground: colors.darkCharcoal,
   inputText: colors.white,
   inputPlaceholder: colors.lightGray,
-  inputBorder: colors.snowGray,
+  inputBorder: colors.gunmetalGray,
 
   // 🔹 상태 색상
   success: colors.successGreen,

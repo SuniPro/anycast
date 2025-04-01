@@ -63,7 +63,7 @@ export const tagSelector = (
         return LPLLogo;
       } else if (subType === "LWC") {
         return LWCLogo;
-      } else if (subType === "Starcraft") {
+      } else if (subType === "STARCRAFT") {
         return StarCraftLogo;
       } else {
         return LolLogo;

@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 export function Cursor() {
   const { isPointer, isLike } = useCursor();
   const cursorRef = useRef<HTMLDivElement>(null);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   useEffect(() => {
     const animateCursor = (e: MouseEvent) => {
@@ -24,7 +25,7 @@ export function Cursor() {
   }, []);
 
   const CursorSelector = () => {
-    if (isPointer) {
+    if (isPointer && !isMobile) {
       return <PointerCursor />;
     } else if (isLike) {
       return <FavoriteCursor />;
@@ -33,7 +34,13 @@ export function Cursor() {
     }
   };
 
-  return <StyledCursor ref={cursorRef}>{CursorSelector()}</StyledCursor>;
+  return (
+    <>
+      {!isMobile && (
+        <StyledCursor ref={cursorRef}>{CursorSelector()}</StyledCursor>
+      )}
+    </>
+  );
 }
 
 const StyledCursor = styled.div`

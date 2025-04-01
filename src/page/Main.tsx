@@ -40,14 +40,14 @@ export function Main() {
       isAllType
         ? getAllLeagueIsLive()
         : getSportsStreamsByType(activeMenu as SPORTS_TYPE, 0, 20),
-    refetchInterval: 10000,
+    refetchInterval: 20000,
     enabled: !!activeMenu, // 또는 필요 조건
   });
 
   const navigationItemWidth = useProportionHook(
     windowWidth,
     140,
-    theme.windowSize.HD,
+    theme.windowSize.mobile,
   );
 
   const navigationContainer = useProportionHook(

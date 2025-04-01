@@ -107,13 +107,12 @@ export const ItemContainer = styled(Container)<{
   `,
 );
 
-export const ItemCase = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    ${theme.flexLayout.column}
+export const ItemCase = styled.div`
+  display: flex;
+  flex-direction: column;
 
-    gap: 8px;
-  `,
-);
+  gap: 8px;
+`;
 
 export const Item = styled.div<{
   width: number;
@@ -158,15 +157,14 @@ export const Item = styled.div<{
   `,
 );
 
-export const DescriptionLine = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    width: 100%;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    ${theme.flexLayout.row};
-  `,
-);
+export const DescriptionLine = styled.div`
+  width: 100%;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+`;
 
 export const ItemDescription = styled.span<{ theme: Theme }>(
   ({ theme }) => css`
@@ -206,14 +204,14 @@ export function EllipsisCase(props: {
   );
 }
 
-export const TextCase = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    width: 100%;
-    height: 100%;
-    ${theme.flexLayout.column}
-    ${theme.flexLayout.center}
-  `,
-);
+export const TextCase = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const Text = styled.span<{ width?: number; textAlign: string }>(
   ({ width, textAlign }) => css`

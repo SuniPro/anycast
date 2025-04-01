@@ -20,10 +20,14 @@ const Container = styled.div<{ theme: Theme }>(
   ({ theme }) => css`
     width: 100%;
     font-family: ${theme.fontStyle.koPubDotumBold};
+    box-sizing: border-box;
+    white-space: nowrap;
+
+    padding: 20px 30px;
   `,
 );
 
 const EmptyTitle = styled.h2`
-  font-size: 30px;
+  font-size: 25px;
   margin-top: 50px;
 `;

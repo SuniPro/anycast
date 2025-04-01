@@ -169,6 +169,7 @@ export function ScreenInfo(props: {
   dateSize?: number;
 }) {
   const { leagueInfo, dateSize } = props;
+  const { windowWidth } = useWindowContext();
   const theme = useTheme();
   const { setIsLike } = useCursor();
 
@@ -176,6 +177,9 @@ export function ScreenInfo(props: {
     (type) => type.menu === (leagueInfo.sportsType as SPORTS_TYPE),
   );
   const label = type ? type.label : leagueInfo.sportsType;
+  const isMobile = windowWidth <= theme.windowSize.mobile;
+
+  const profileSize = isMobile ? 30 : 50;
 
   return (
     <ScreenDescriptionLine>
@@ -196,61 +200,74 @@ export function ScreenInfo(props: {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+
+          @media ${theme.deviceSize.phone} {
+            flex-direction: column;
+          }
         `}
       >
-        <div>
-          <StyledImage
-            imageUrl={
-              leagueInfo.thumbnailUrl
-                ? leagueInfo.thumbnailUrl
-                : tagSelector(
-                    leagueInfo.streamUrl,
-                    leagueInfo.sportsType,
-                    leagueInfo.sportsTypeSub,
-                  )
-            }
-            size={{
-              width: 50,
-              height: 50,
-            }}
-            css={css`
-              background-size: 50px;
-              border-radius: ${theme.borderRadius.roundedBox};
-            `}
-          />
-        </div>
         <div
           css={css`
-            width: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            margin-left: 10px;
+            flex-direction: row;
+            flex-wrap: nowrap;
           `}
         >
-          <span
+          <div>
+            <StyledImage
+              imageUrl={
+                leagueInfo.thumbnailUrl
+                  ? leagueInfo.thumbnailUrl
+                  : tagSelector(
+                      leagueInfo.streamUrl,
+                      leagueInfo.sportsType,
+                      leagueInfo.sportsTypeSub,
+                    )
+              }
+              size={{
+                width: profileSize,
+                height: profileSize,
+              }}
+              css={css`
+                background-size: ${profileSize}px;
+                border-radius: ${theme.borderRadius.roundedBox};
+              `}
+            />
+          </div>
+          <div
             css={css`
-              font-family: ${theme.fontStyle.appleNeoBold};
-              padding: 0;
-              margin: 0;
-              font-size: 20px;
-              text-align: left;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              margin-left: 10px;
             `}
           >
-            {leagueInfo.channelName}
-          </span>
-          <span
-            css={css`
-              font-family: ${theme.fontStyle.koPubDotumMedium};
-              padding: 0;
-              margin: 0;
-              font-size: ${dateSize}px;
-              text-align: left;
-            `}
-          >
-            {iso8601ToYYMMDDHHMM(leagueInfo.leagueDate)}
-          </span>
+            <span
+              css={css`
+                font-family: ${theme.fontStyle.appleNeoBold};
+                padding: 0;
+                margin: 0;
+                font-size: ${isMobile ? 14 : 20}px;
+                text-align: left;
+              `}
+            >
+              {leagueInfo.channelName}
+            </span>
+            <span
+              css={css`
+                font-family: ${theme.fontStyle.koPubDotumMedium};
+                padding: 0;
+                margin: 0;
+                font-size: ${dateSize ? dateSize : isMobile ? 12 : 16}px;
+                text-align: left;
+              `}
+            >
+              {iso8601ToYYMMDDHHMM(leagueInfo.leagueDate)}
+            </span>
+          </div>
         </div>
+
         <div
           css={css`
             width: 50%;
@@ -268,10 +285,15 @@ export function ScreenInfo(props: {
               margin: 0;
               list-style: none;
             }
+
+            @media ${theme.deviceSize.phone} {
+              width: 100%;
+            }
           `}
         >
           <ul
             css={css`
+              width: 100%;
               display: flex;
               flex-direction: row;
               flex-wrap: nowrap;
@@ -316,12 +338,17 @@ const TagBox = styled.li<{ theme: Theme; isLive: boolean }>(
     font-family: ${theme.fontStyle.appleNeoBold};
     white-space: nowrap;
     font-size: 18px;
-    line-height: 26px;
     padding: 8px 26px; // 위아래 5px = 총 10px 더 크게
     min-width: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @media ${theme.deviceSize.phone} {
+      font-size: 12px;
+      padding: 6px 12px; // 위아래 5px = 총 10px 더 크게
+      min-width: 50px;
+    }
   `,
 );

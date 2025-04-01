@@ -197,5 +197,10 @@ const NavigationFuncItem = styled(FuncItem)<{
     span {
       padding: 0;
     }
+
+    @media ${theme.deviceSize.phone} {
+      width: 80px;
+      font-size: 15px;
+    }
   `,
 );

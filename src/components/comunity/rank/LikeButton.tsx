@@ -196,8 +196,8 @@ export function LikeButton(props: { rate: number; className?: string }) {
           isContainerHovered
             ? "#DD2E44"
             : count !== 0
-              ? ""
-              : `${theme.mode.textSecondary}`
+            ? ""
+            : `${theme.mode.textSecondary}`
         }
       />
     </Container>

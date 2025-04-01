@@ -3,9 +3,9 @@ import { Dispatch, SetStateAction } from "react";
 import { SPORTS_TYPE, STREAMING_MENU_LIST } from "../../model/Streams";
 import { Navigation } from "../Navigation/Navigation";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+import { css, Theme, useTheme } from "@emotion/react";
 import { useWindowContext } from "../../Context/WindowContext";
-import theme, { OPACITY_35 } from "../../styles/theme";
+import { defaultTheme, OPACITY_35 } from "../../styles/theme";
 import { useProportionHook } from "../../hooks/useWindowHooks";
 import { SCREEN_CONTAINER_PADDING } from "./ScreenArea";
 import { ASPECT_RATIO } from "../layouts/Layouts";
@@ -32,11 +32,12 @@ interface ActiveMenuStateType {
 }
 
 export function RecommendArea(props: ActiveMenuStateType) {
+  const theme = useTheme();
   const { width, height } = props;
   const { windowWidth } = useWindowContext();
   const navigate = useNavigate();
   const { activeMenu, setActiveMenu } = props.activeMenuState;
-  const isTablet = windowWidth < theme.windowSize.HD;
+  const isTablet = windowWidth < theme.windowSize.tablet;
 
   const isAllType = activeMenu === "ALL";
 
@@ -55,7 +56,7 @@ export function RecommendArea(props: ActiveMenuStateType) {
   const navigationItemWidth = useProportionHook(
     windowWidth,
     90,
-    theme.windowSize.HD,
+    defaultTheme.windowSize.HD,
   );
 
   const navigationContainer = useProportionHook(
@@ -73,7 +74,7 @@ export function RecommendArea(props: ActiveMenuStateType) {
     (contentsWidth / ASPECT_RATIO.widesScreen.w) * ASPECT_RATIO.widesScreen.h;
 
   return (
-    <RecommendLine width={width} height={height}>
+    <RecommendLine width={width} height={height} theme={theme}>
       <div
         css={css`
           height: 48px;
@@ -97,15 +98,20 @@ export function RecommendArea(props: ActiveMenuStateType) {
         />
       </div>
 
-      <RecommendContentsContainer>
+      <RecommendContentsContainer theme={theme}>
         {leagueListByType ? (
           leagueListByType.length > 0 ? (
             leagueListByType.map((league, index) => (
               <ContentsLine
                 key={index}
                 onClick={() => navigate(`/auditorium/${league.id}`)}
+                theme={theme}
               >
-                <Contents width={contentsWidth} height={contentsHeight}>
+                <Contents
+                  width={contentsWidth}
+                  height={contentsHeight}
+                  theme={theme}
+                >
                   {league.sportsTypeSub === "BJLOL" ? (
                     <HlsPlayer
                       hlsPath={league.streamUrl}
@@ -127,10 +133,12 @@ export function RecommendArea(props: ActiveMenuStateType) {
                     />
                   )}
                 </Contents>
-                <ContentsDescriptionLine>
-                  <ContentsTitle>{league.liveTitle}</ContentsTitle>
-                  <ChannelName>{league.channelName}</ChannelName>
-                  <ContentsDate>
+                <ContentsDescriptionLine theme={theme}>
+                  <ContentsTitle theme={theme}>
+                    {league.liveTitle}
+                  </ContentsTitle>
+                  <ChannelName theme={theme}>{league.channelName}</ChannelName>
+                  <ContentsDate theme={theme}>
                     {iso8601ToYYMMDDHHMM(league.leagueDate)}
                   </ContentsDate>
                 </ContentsDescriptionLine>
@@ -143,8 +151,7 @@ export function RecommendArea(props: ActiveMenuStateType) {
       </RecommendContentsContainer>
       <div
         css={css`
-          border-bottom: 1px solid
-            ${theme.defaultTheme.textSecondary + OPACITY_35};
+          border-bottom: 1px solid ${theme.mode.textSecondary + OPACITY_35};
           margin-top: 13px;
           width: 100%;
         `}
@@ -153,50 +160,61 @@ export function RecommendArea(props: ActiveMenuStateType) {
   );
 }
 
-const ContentsTitle = styled.h4`
-  font-size: 15px;
-  font-family: ${theme.defaultTheme.font.component.itemTitle};
-  text-align: left;
-  margin: 0;
-  padding: 0 0 2px 0;
-`;
+const ContentsTitle = styled.h4<{ theme: Theme }>(
+  ({ theme }) => css`
+    font-size: 15px;
+    font-family: ${theme.mode.font.component.itemTitle};
+    text-align: left;
+    margin: 0;
+    padding: 0 0 2px 0;
+  `,
+);
 
-const ChannelName = styled.span`
-  font-family: ${theme.fontStyle.appleNeoBold};
-  font-size: 14px;
-`;
-const ContentsDate = styled.span`
-  font-family: ${theme.fontStyle.koPubDotumBold};
-  font-weight: 500;
-  font-size: 12px;
-`;
+const ChannelName = styled.span<{ theme: Theme }>(
+  ({ theme }) => css`
+    font-family: ${theme.fontStyle.appleNeoBold};
+    font-size: 14px;
+  `,
+);
 
-const ContentsDescriptionLine = styled.div`
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 100%;
-  box-sizing: border-box;
-  ${theme.flexLayout.column}
-`;
+const ContentsDate = styled.span<{ theme: Theme }>(
+  ({ theme }) => css`
+    font-family: ${theme.fontStyle.koPubDotumBold};
+    font-weight: 500;
+    font-size: 12px;
+  `,
+);
 
-const ContentsLine = styled.div`
-  width: 100%;
-  padding: 4px;
-  box-sizing: border-box;
-  justify-content: space-between;
-  align-items: flex-start;
+const ContentsDescriptionLine = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    ${theme.flexLayout.column}
+  `,
+);
 
-  cursor:
-    url("../Logo/anyCast-logo-small.svg") 2 2,
-    auto;
+const ContentsLine = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: flex-start;
 
-  gap: 8px;
-  ${theme.flexLayout.row}
-`;
+    cursor:
+      url("../Logo/anyCast-logo-small.svg") 2 2,
+      auto;
 
-const Contents = styled.div<{ width: number; height: number }>(
-  ({ width, height }) => css`
-    border: 1px solid ${theme.defaultTheme.bodyBackground};
+    gap: 8px;
+    ${theme.flexLayout.row}
+  `,
+);
+
+const Contents = styled.div<{ theme: Theme; width: number; height: number }>(
+  ({ theme, width, height }) => css`
+    border: 1px solid ${theme.mode.bodyBackground};
     border-radius: 14px;
     box-sizing: border-box;
     overflow: hidden;
@@ -209,20 +227,26 @@ const Contents = styled.div<{ width: number; height: number }>(
   `,
 );
 
-const RecommendContentsContainer = styled.div`
-  flex-grow: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+const RecommendContentsContainer = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  padding-top: 20px;
-  justify-content: flex-start;
-  ${theme.flexLayout.column}
-`;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    padding-top: 20px;
+    justify-content: flex-start;
+    ${theme.flexLayout.column}
+  `,
+);
 
-const RecommendLine = styled.section<{ width: number; height: number }>(
-  ({ width, height }) => css`
+const RecommendLine = styled.section<{
+  width: number;
+  height: number;
+  theme: Theme;
+}>(
+  ({ width, height, theme }) => css`
     width: ${width}px;
     height: ${height}px;
 

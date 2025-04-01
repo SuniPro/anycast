@@ -1,15 +1,22 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import theme from "../../styles/theme";
+import { css, Theme, useTheme } from "@emotion/react";
 import { LogoIcon, LogoText } from "../Logo/LogoIcon";
 import styled from "@emotion/styled";
 import { SearchIcon } from "../styled/icons";
 import { useWindowContext } from "../../Context/WindowContext";
 import { FuncIconItem } from "../styled/Button/Button";
-import { ChangeEvent, useCallback, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useState,
+} from "react";
 import { useSearchContext } from "../../Context/SearchContext";
 import { debounce } from "lodash";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import Brightness5Icon from "@mui/icons-material/Brightness5";
+import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorAlert } from "../Alert/Alerts";
 import { Modal } from "@mui/material";
@@ -20,22 +27,32 @@ import { getAllLeague } from "../../api/streaming";
 import { HorizontalDivider } from "../layouts/Layouts";
 import { useCursor } from "../../Context/CursorContext";
 
-export function Header() {
+export function Header(props: {
+  darkState: {
+    darkMode: boolean;
+    setDarkMode: Dispatch<SetStateAction<boolean>>;
+  };
+}) {
+  const { darkMode, setDarkMode } = props.darkState;
+
+  const theme = useTheme();
   const { windowWidth } = useWindowContext();
-  const [scheduleListOpen, setScheduleListOpen] = useState(false);
-  const navigate = useNavigate();
   const { setIsPointer } = useCursor();
+  const navigate = useNavigate();
+
+  const [scheduleListOpen, setScheduleListOpen] = useState(false);
 
   const isDeskTop = windowWidth > theme.windowSize.tablet;
 
   return (
-    <HeaderWrapper>
+    <HeaderWrapper theme={theme}>
       <LogoContainer
-        onMouseEnter={() => setIsPointer(true)}
-        onMouseLeave={() => setIsPointer(false)}
         width={40 * 1.3}
         height={40}
         onClick={() => navigate("/")}
+        theme={theme}
+        onMouseEnter={() => setIsPointer(true)}
+        onMouseLeave={() => setIsPointer(false)}
       >
         {isDeskTop ? <LogoText /> : <LogoIcon width={40 * 1.3} height={40} />}
       </LogoContainer>
@@ -61,6 +78,20 @@ export function Header() {
             label={<></>}
           />
         </li>
+        <li>
+          <FuncIconItem
+            func={() => setDarkMode((prev) => !prev)}
+            isActive={false}
+            icon={
+              darkMode ? (
+                <NightlightRoundIcon sx={{ color: "yellow" }} />
+              ) : (
+                <Brightness5Icon color="warning" />
+              )
+            }
+            label={<></>}
+          />
+        </li>
       </div>
       <ScheduleListModal
         open={scheduleListOpen}
@@ -72,6 +103,7 @@ export function Header() {
 
 export function ScheduleListModal(props: { open: boolean; close: () => void }) {
   const { open, close } = props;
+  const theme = useTheme();
 
   const { windowWidth } = useWindowContext();
   const { size } = useProportionHook(
@@ -101,11 +133,11 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
       aria-describedby="modal-modal-description"
     >
       <>
-        <ModalContainer width={size}>
+        <ModalContainer width={size} theme={theme}>
           {sortedLeagueList.map((leagueInfo) => (
             <>
               <ScreenInfo leagueInfo={leagueInfo} dateSize={16} />
-              <HorizontalDivider />
+              <HorizontalDivider theme={theme} />
             </>
           ))}
         </ModalContainer>
@@ -114,8 +146,12 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
   );
 }
 
-export const LogoContainer = styled.div<{ width: number; height: number }>(
-  ({ width, height }) => css`
+export const LogoContainer = styled.div<{
+  theme: Theme;
+  width: number;
+  height: number;
+}>(
+  ({ theme, width, height }) => css`
     width: ${width}px;
     height: ${height}px;
     gap: 4px;
@@ -124,35 +160,37 @@ export const LogoContainer = styled.div<{ width: number; height: number }>(
   `,
 );
 
-export const HeaderWrapper = styled.header`
-  // 항상 하위요소들의 최상위에 존재하기 위해 z-index를 추가합니다.
-  height: 70px;
-  z-index: 1;
-  top: 0;
-  position: fixed;
-  width: 100%;
-  box-sizing: border-box;
+export const HeaderWrapper = styled.header<{ theme: Theme }>(
+  ({ theme }) => css`
+    // 항상 하위요소들의 최상위에 존재하기 위해 z-index를 추가합니다.
+    height: 70px;
+    z-index: 1;
+    top: 0;
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
 
-  background-color: ${theme.defaultTheme.cardBackground};
-  padding: 10px 2rem;
+    background-color: ${theme.mode.bodyBackground};
+    padding: 10px 2rem;
 
-  ${theme.flexLayout.row}
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
+    ${theme.flexLayout.row}
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
 
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-
-    gap: 10px;
-
-    li {
+    ul {
+      list-style-type: none;
       padding: 0;
+      margin: 0;
+
+      gap: 10px;
+
+      li {
+        padding: 0;
+      }
     }
-  }
-`;
+  `,
+);
 
 export const debounceHandler = debounce(
   (value: string, callback: (_value: string) => void) => {
@@ -163,6 +201,7 @@ export const debounceHandler = debounce(
 
 export function SearchBar(props: { width: number; height: number }) {
   const { width, height } = props;
+  const theme = useTheme();
   const locate = useLocation();
   const { searchValue, setSearchValue } = useSearchContext();
 
@@ -176,7 +215,7 @@ export function SearchBar(props: { width: number; height: number }) {
   const inAuditorium = locate.pathname.includes("auditorium");
 
   return (
-    <SearchContainer width={width} height={height}>
+    <SearchContainer width={width} height={height} theme={theme}>
       <SearchArea
         onChange={handleChange}
         onClick={() => {
@@ -188,28 +227,39 @@ export function SearchBar(props: { width: number; height: number }) {
         type="text"
         placeholder="Search"
         isActive={searchValue.length !== 0}
+        theme={theme}
       />
       <SearchButton>
         <StyledSearchIcon
           isActive={searchValue.length !== 0}
           width={30}
           height={30}
+          theme={theme}
         />
       </SearchButton>
     </SearchContainer>
   );
 }
 
-const StyledSearchIcon = styled(SearchIcon)<{ isActive: boolean }>(
-  ({ isActive }) => css`
+const StyledSearchIcon = styled(SearchIcon)<{
+  theme: Theme;
+  isActive: boolean;
+}>(
+  ({ theme, isActive }) => css`
     path {
-      fill: ${isActive && theme.defaultTheme.hoverEffect} !important;
+      fill: ${isActive
+        ? theme.mode.hoverEffect
+        : theme.mode.inputBorder} !important;
     }
   `,
 );
 
-const SearchContainer = styled.div<{ width: number; height: number }>(
-  ({ width, height }) => css`
+const SearchContainer = styled.div<{
+  width: number;
+  height: number;
+  theme: Theme;
+}>(
+  ({ width, height, theme }) => css`
         width: ${width}px;
         height: ${height}px;
         display: flex;
@@ -221,57 +271,63 @@ const SearchContainer = styled.div<{ width: number; height: number }>(
 
         &:hover {
             input {
-                border: 0.3mm solid ${theme.defaultTheme.hoverEffect};
+                border: 2px solid ${theme.mode.hoverEffect};
             }
 
             svg > path {
-                fill: ${theme.defaultTheme.hoverEffect};
+                fill: ${theme.mode.hoverEffect};
             }
 
             path {
-                fill: ${theme.defaultTheme.hoverEffect};
+                fill: ${theme.mode.hoverEffect};
             }
         }
 
         &:active {
             input {
-                border: 0.3mm solid ${theme.defaultTheme.hoverEffect};
+                border: 2px solid ${theme.mode.hoverEffect};
             }
 
             svg {
-                fill: ${theme.defaultTheme.hoverEffect};
+                fill: ${theme.mode.hoverEffect};
             }
 
             path {
-                fill: ${theme.defaultTheme.hoverEffect};
+                fill: ${theme.mode.hoverEffect};
             }
         }
 
         &:focus {
             input {
-                border: 0.3mm solid ${theme.defaultTheme.hoverEffect};
+                border: 2px solid ${theme.mode.hoverEffect};
             }
 
             svg {
-                fill: ${theme.defaultTheme.hoverEffect};
+                fill: ${theme.mode.hoverEffect};
             }
 
             path {
-                fill: ${theme.defaultTheme.hoverEffect};
+                fill: ${theme.mode.hoverEffect};
             }
     `,
 );
 
-const SearchArea = styled.input<{ isActive: boolean }>(
-  ({ isActive }) => css`
+const SearchArea = styled.input<{ isActive: boolean; theme: Theme }>(
+  ({ isActive, theme }) => css`
     width: 100%;
     height: 100%;
-    padding: 2px 10px;
+    padding: 2px 18px;
     border-radius: 18px;
-    border: 0.3mm solid
-      ${isActive
-        ? theme.defaultTheme.hoverEffect
-        : theme.defaultTheme.textSecondary};
+    font-size: 14px;
+    background-color: ${theme.mode.cardBackground};
+    font-family: ${theme.mode.font.search};
+    color: ${theme.mode.textPrimary};
+    border: 2px solid
+      ${isActive ? theme.mode.hoverEffect : theme.mode.inputBorder};
+
+    &:focus-visible {
+      outline: none;
+    }
   `,
 );
 
@@ -288,18 +344,18 @@ const SearchButton = styled.div`
   box-sizing: border-box;
 `;
 
-export const ModalContainer = styled.div<{ width: number }>(
-  ({ width }) => css`
+export const ModalContainer = styled.div<{ width: number; theme: Theme }>(
+  ({ width, theme }) => css`
     position: absolute;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: ${width}px;
-    border: 3px solid ${theme.defaultTheme.buttonHoverBackground};
+    border: 3px solid ${theme.mode.buttonHoverBackground};
     border-radius: ${theme.borderRadius.softBox};
     box-shadow: 24px;
-    color: ${theme.defaultTheme.textPrimary};
-    background-color: ${theme.defaultTheme.cardBackground};
+    color: ${theme.mode.textPrimary};
+    background-color: ${theme.mode.cardBackground};
     height: 60%;
     overflow-x: visible;
     overflow-y: scroll;

@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import styled from "@emotion/styled";
-import theme from "../../styles/theme";
 import Button from "@mui/material/Button";
 
 export function ErrorAlert(message: string): void {
   toast.error(message);
 }
+
 export function SuccessAlert(message: string): void {
   toast.success(message);
 }
@@ -41,13 +41,16 @@ export function ConfirmAlert(message: string, func: () => void): void {
 const ConfirmAlertContainer = styled.div`
   width: 350px;
   gap: 20px;
-  ${theme.flexLayout.column}
-  ${theme.flexLayout.center}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ConfirmFuncBox = styled.div`
   width: 50%;
   justify-content: space-between;
   align-items: center;
-  ${theme.flexLayout.row}
+  display: flex;
+  flex-direction: row;
 `;

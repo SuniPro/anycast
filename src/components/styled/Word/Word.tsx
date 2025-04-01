@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { css } from "@mui/material";
-import theme from "../../../styles/theme";
 import { ReactNode } from "react";
+import { Theme, useTheme } from "@emotion/react";
 
 export function WordBox(props: {
   className?: string;
@@ -16,17 +16,22 @@ export function WordBox(props: {
   label: ReactNode;
 }) {
   const { className, icon, label, ...other } = props;
+  const theme = useTheme();
   return (
     <WordContainer className={className}>
       <i>{icon}</i>
-      <Word {...other}>{label}</Word>
+      <Word theme={theme} {...other}>
+        {label}
+      </Word>
     </WordContainer>
   );
 }
 
 const WordContainer = styled.div`
-  ${theme.flexLayout.row}
-  ${theme.flexLayout.center}
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Word = styled.span<{
@@ -40,12 +45,14 @@ const Word = styled.span<{
   fontWeight?: number;
   fontSize?: number;
   fontStyle?: string;
+  theme: Theme;
 }>(
   ({
+    theme,
     size,
     isActive,
     color,
-    activeColor = theme.defaultTheme.textAccent,
+    activeColor = theme.mode.textAccent,
     fontSize,
     fontWeight,
     fontStyle = "sans-serif",

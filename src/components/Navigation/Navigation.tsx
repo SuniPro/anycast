@@ -3,9 +3,8 @@ import _ from "lodash";
 import React, { useRef } from "react";
 import styled from "@emotion/styled";
 import { useHorizontalScroll } from "../../hooks/useWheel";
-import theme from "../../styles/theme";
 import { FuncItem } from "../styled/Button/Button";
-import { css } from "@emotion/react";
+import { css, Theme, useTheme } from "@emotion/react";
 import { useParams } from "react-router-dom";
 import { miniGames, sportsMenu } from "./navigationMenuList";
 import { SPORTS_TYPE } from "../../model/Streams";
@@ -72,6 +71,8 @@ export function Navigation(props: NavigationPropsType) {
   } = props;
   const { lastPath } = useParams();
 
+  const theme = useTheme();
+
   const ref = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +96,7 @@ export function Navigation(props: NavigationPropsType) {
       width={navigationContainerWidth}
       className={className}
       justifyContent={justifyContent}
+      theme={theme}
     >
       <NavigationMover
         onMouseLeave={() => {
@@ -131,8 +133,12 @@ export function Navigation(props: NavigationPropsType) {
   );
 }
 
-const Container = styled.div<{ width: number; justifyContent?: string }>(
-  ({ width, justifyContent }) => css`
+const Container = styled.div<{
+  width: number;
+  justifyContent?: string;
+  theme: Theme;
+}>(
+  ({ width, justifyContent, theme }) => css`
     cursor: none;
     width: ${width}px;
     display: flex;
@@ -141,14 +147,16 @@ const Container = styled.div<{ width: number; justifyContent?: string }>(
     align-items: center;
     justify-content: ${justifyContent};
 
+    color: ${theme.mode.textPrimary};
+
     border-radius: ${theme.borderRadius.softBox};
-    background: ${theme.defaultTheme.cardBackground};
+    background: ${theme.mode.bodyBackground};
     position: relative;
 
     overflow: hidden;
 
     button:hover {
-      border-color: ${theme.defaultTheme.buttonHoverBackground};
+      border-color: ${theme.mode.buttonHoverBackground};
     }
   `,
 );
@@ -177,13 +185,15 @@ const NavigationFuncItem = styled(FuncItem)<{
   width: number;
   justifyContent: "center" | "flex-start";
 }>(
-  ({ width, justifyContent }) => css`
+  ({ width, justifyContent, theme }) => css`
     width: ${width}px;
     align-items: center;
     white-space: nowrap;
     justify-content: ${justifyContent};
     font-family: ${theme.fontStyle.koPubDotumBold};
-    ${theme.flexLayout.row}
+    display: flex;
+    flex-direction: row;
+
     span {
       padding: 0;
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import theme from "../styles/theme";
+import { defaultTheme } from "../styles/theme";
 
 export function useItemResizing(
   windowWidth: number,
@@ -8,9 +8,11 @@ export function useItemResizing(
   viewLength: number,
   moveFactor: number,
 ) {
-  const [isTablet, setIsTablet] = useState(windowWidth < theme.windowSize.HD);
+  const [isTablet, setIsTablet] = useState(
+    windowWidth < defaultTheme.windowSize.HD,
+  );
   const [isMobile, setIsMobile] = useState(
-    windowWidth < theme.windowSize.tablet,
+    windowWidth < defaultTheme.windowSize.tablet,
   );
   const [moveParam, setMoveParam] = useState(moveFactor);
   const [itemWidth, setItemWidth] = useState<number>(
@@ -19,7 +21,7 @@ export function useItemResizing(
   );
 
   useEffect(() => {
-    if (windowWidth < theme.windowSize.HD) {
+    if (windowWidth < defaultTheme.windowSize.HD) {
       setIsTablet(true);
       setMoveParam(1);
     } else {
@@ -27,7 +29,7 @@ export function useItemResizing(
       setMoveParam(moveFactor);
     }
 
-    if (windowWidth < theme.windowSize.tablet) {
+    if (windowWidth < defaultTheme.windowSize.tablet) {
       setIsMobile(true);
     }
     setItemWidth(

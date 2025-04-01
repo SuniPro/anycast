@@ -1,22 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import { useWindowContext } from "../../Context/WindowContext";
 import { useProportionSizeHook } from "../../hooks/useWindowHooks";
-import theme from "../../styles/theme";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+import { css, Theme, useTheme } from "@emotion/react";
 
 export function LogoText(props: { fontSize?: number }) {
   const { fontSize = 28 } = props;
-  return <LogoTextCase fontSize={fontSize}>anycast</LogoTextCase>;
+  const theme = useTheme();
+  return (
+    <LogoTextCase fontSize={fontSize} theme={theme}>
+      anycast
+    </LogoTextCase>
+  );
 }
 
-const LogoTextCase = styled.span<{ fontSize: number }>(
-  ({}) => css`
+const LogoTextCase = styled.span<{ fontSize: number; theme: Theme }>(
+  ({ theme, fontSize }) => css`
     white-space: nowrap;
     color: ${theme.colors.honeyHaze};
     font-family: ${theme.fontStyle.poppins};
     font-weight: 700;
-    font-size: 28px;
+    font-size: ${fontSize}px;
     transform: translateY(0%);
     letter-spacing: -0.07em;
   `,
@@ -29,6 +33,7 @@ export function LogoIcon(props: {
   height?: number;
 }) {
   const { className, width = 606, height = 468 } = props;
+  const theme = useTheme();
 
   const { windowWidth } = useWindowContext();
   const { size } = useProportionSizeHook(
@@ -48,6 +53,7 @@ export function LogoIcon(props: {
         height={size.height}
         viewBox="0 0 29 23"
         version="1.1"
+        theme={theme}
       >
         <g id="surface1">
           <path
@@ -104,13 +110,17 @@ export function LogoIcon(props: {
 const LogoContainer = styled.div`
   width: 100%;
   height: 100%;
-  ${theme.flexLayout.column}
-  ${theme.flexLayout.center}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
-const StyledLogo = styled.svg`
-  path {
-    color: ${theme.colors.honeyHaze};
-    fill: ${theme.colors.honeyHaze};
-  }
-`;
+const StyledLogo = styled.svg<{ theme: Theme }>(
+  ({ theme }) => css`
+    path {
+      color: ${theme.colors.honeyHaze};
+      fill: ${theme.colors.honeyHaze};
+    }
+  `,
+);

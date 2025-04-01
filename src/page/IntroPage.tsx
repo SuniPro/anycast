@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { Dispatch, SetStateAction } from "react";
 // import "./intro.scss";
-import theme from "../styles/theme";
-import { css } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 
 export function IntroPage(props: {
   setCheck: Dispatch<SetStateAction<boolean>>;
@@ -34,6 +33,7 @@ function TitleWrapper(props: {
   children: React.ReactNode;
 }) {
   const { setCheck, children } = props;
+  const theme = useTheme();
   const flattenChildren = React.Children.toArray(children);
   const processedLines: React.ReactNode[] = [];
   let currentLine: React.ReactNode[] = [];

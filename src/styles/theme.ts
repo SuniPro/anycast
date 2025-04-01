@@ -9,7 +9,7 @@ const deviceSize = {
   desktop: "screen and (min-width: 1281px)",
 };
 
-const windowSize = {
+export const windowSize = {
   mobile: 645,
   tablet: 768,
   HD: 1280,
@@ -75,14 +75,6 @@ const fontStyle = {
   koPubDotumBold: "KOPUB Dotum bold",
 };
 
-const mainFrameSize = {
-  defaultWidth: 640,
-};
-
-const shadowStyle = {
-  default: "0 1px 2px rgba(0, 0, 0, 0.2)",
-};
-
 const borderRadius = {
   circle: "50%",
   roundedBox: "30px",
@@ -109,6 +101,7 @@ const colors = {
 
   // ✅ Neutral Colors
   snowGray: "#F5F5F5", // 기존 showGray
+  platinum: "#e6e6e6",
   ashGray: "#D6D6D6",
   steelGray: "#A0A0A0",
   gunmetalGray: "#5A5A5A",
@@ -154,9 +147,9 @@ const colors = {
   basicBlack: "#181818",
 };
 
-const defaultTheme = {
+const defaultMode = {
   // 🔹 배경 색상 (Black Theme)
-  bodyBackground: colors.snowGray,
+  bodyBackground: colors.white,
   contentBackground: colors.darkCharcoal,
   cardBackground: colors.white,
 
@@ -187,7 +180,78 @@ const defaultTheme = {
   inputBackground: colors.darkCharcoal,
   inputText: colors.white,
   inputPlaceholder: colors.lightGray,
-  inputBorder: colors.gunmetalGray,
+  inputBorder: colors.platinum,
+
+  // 🔹 상태 색상
+  success: colors.successGreen,
+  warning: colors.warningRed,
+
+  // 🔹 강조 색상
+  highlight: colors.neonBlue,
+  highlightHover: colors.electricBlue,
+
+  // 🔹 호버 색상
+  hoverEffect: colors.honeyHaze,
+
+  // 🔹 푸터 색상
+  footerBackground: colors.midnightBlack,
+  footerText: colors.lightGray,
+
+  font: {
+    header: {
+      menuItem: fontStyle.yesGothicExtraBold,
+    },
+    snb: {
+      menuText: fontStyle.roboto,
+    },
+    navigation: {
+      item: fontStyle.appleNeoBold,
+    },
+    search: fontStyle.yesGothicMedium,
+    component: {
+      mainTitle: fontStyle.montserrat,
+      itemTitle: fontStyle.sCoreDreamBold,
+    },
+    dynamicIsland: {
+      stateView: fontStyle.yesGothicExtraBold,
+    },
+  },
+};
+
+const darkMode = {
+  // 🔹 배경 색상 (Black Theme)
+  bodyBackground: colors.darkCharcoal,
+  contentBackground: colors.black,
+  cardBackground: colors.black,
+
+  // 🔹 기본 텍스트 색상
+  textPrimary: colors.white,
+  textSecondary: colors.steelGray,
+  textAccent: colors.vividCerulean,
+
+  // 🔹 버튼 색상
+  buttonBackground: colors.black,
+  buttonHoverBackground: colors.honeyHaze,
+  buttonText: colors.white,
+
+  // 🔹 링크 색상
+  linkColor: colors.electricBlue,
+  linkHover: colors.azureBlue,
+
+  // 🔹 네비게이션 & 메뉴
+  menuBackground: colors.midnightBlack,
+  menuActive: colors.honeyHaze,
+  menuInactive: colors.lightGrayToneUp,
+
+  // 🔹 테두리 & 구분선
+  borderColor: colors.gunmetalGray,
+  dividerColor: colors.steelGray,
+
+  // 🔹 입력 필드
+  inputBackground: colors.darkCharcoal,
+  inputText: colors.white,
+  inputPlaceholder: colors.lightGray,
+  inputBorder: colors.snowGray,
 
   // 🔹 상태 색상
   success: colors.successGreen,
@@ -218,37 +282,42 @@ const defaultTheme = {
       mainTitle: fontStyle.montserrat,
       itemTitle: fontStyle.sCoreDreamBold,
     },
+    search: fontStyle.yesGothicMedium,
     dynamicIsland: {
       stateView: fontStyle.yesGothicExtraBold,
     },
   },
 };
 
+export type defaultModeTypes = typeof defaultMode;
+export type darkModeTypes = typeof darkMode;
 export type DeviceSizeTypes = typeof deviceSize;
 export type WindowSizeTypes = typeof windowSize;
 export type FlexLayoutTypes = typeof flexLayout;
 export type FontSizeTypes = typeof fontSize;
 export type ColorTypes = typeof colors;
 export type FontTypes = typeof fontStyle;
-export type ShadowStylesTypes = typeof shadowStyle;
 export type BorderRadiusTypes = typeof borderRadius;
-export type DefaultThemeType = typeof defaultTheme;
-export type MainFrameSizeType = typeof mainFrameSize;
 
-const baseTheme = createTheme();
-
-const theme: Theme = {
-  ...baseTheme,
+const muiBase = createTheme();
+const baseTheme = {
+  colors,
+  flexLayout,
   deviceSize,
   windowSize,
-  flexLayout,
-  fontStyle,
   fontSize,
-  colors,
-  defaultTheme,
-  shadowStyle,
+  fontStyle,
   borderRadius,
-  mainFrameSize,
 };
 
-export default theme;
+export const defaultTheme: Theme = {
+  ...muiBase,
+  ...baseTheme,
+  mode: defaultMode,
+};
+
+export const darkTheme: Theme = {
+  ...muiBase,
+  ...baseTheme,
+  mode: darkMode,
+};

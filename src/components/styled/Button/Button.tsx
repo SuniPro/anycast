@@ -1,25 +1,25 @@
 import styled from "@emotion/styled";
-import { css } from "@mui/material";
 import { ReactElement } from "react";
 import { AppProps, FuncIconItemProps, FuncItemProps } from "./ButtonPropsType";
-import theme from "../../../styles/theme";
 import { EllipsisCase } from "../../layouts/Layouts";
+import { css, Theme, useTheme } from "@emotion/react";
 
 export function AppItem(props: AppProps) {
   const { className, icon, label, caseWidth, func, ...other } = props;
+  const theme = useTheme();
 
   return (
-    <AppCase caseWidth={caseWidth} onClick={func}>
-      <IconBox className={className} {...other}>
+    <AppCase caseWidth={caseWidth} onClick={func} theme={theme}>
+      <IconBox theme={theme} className={className} {...other}>
         {icon}
       </IconBox>
-      <AppName text={label} testAlign="center" width={60} />
+      <AppName text={label} testAlign="center" width={60} theme={theme} />
     </AppCase>
   );
 }
 
-const AppCase = styled.div<{ caseWidth?: string }>(
-  ({ caseWidth = "100%" }) => css`
+const AppCase = styled.div<{ caseWidth?: string; theme: Theme }>(
+  ({ caseWidth = "100%", theme }) => css`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,12 +27,12 @@ const AppCase = styled.div<{ caseWidth?: string }>(
     width: ${caseWidth};
     height: 100%;
 
-    color: ${theme.defaultTheme.textPrimary};
+    color: ${theme.mode.textPrimary};
   `,
 );
 
-const IconBox = styled.div<{ width?: number; height?: number }>(
-  ({ width = 50, height = 50 }) => css`
+const IconBox = styled.div<{ width?: number; height?: number; theme: Theme }>(
+  ({ width = 50, height = 50, theme }) => css`
     width: ${width}px;
     height: ${height}px;
     flex-shrink: 0;
@@ -42,26 +42,30 @@ const IconBox = styled.div<{ width?: number; height?: number }>(
     svg {
       width: ${width}px;
       height: ${width}px;
-      fill: ${theme.defaultTheme.textPrimary};
+      fill: ${theme.mode.textPrimary};
       transition: fill 0.2s;
 
       &:hover {
-        fill: ${theme.defaultTheme.textAccent};
+        fill: ${theme.mode.textAccent};
       }
     }
   `,
 );
 
-const AppName = styled(EllipsisCase)`
-  font-family: ${theme.fontStyle.yesGothicLight};
-  font-size: 15px;
-`;
+const AppName = styled(EllipsisCase)<{ theme: Theme }>(
+  ({ theme }) => css`
+    font-family: ${theme.fontStyle.yesGothicLight};
+    font-size: 15px;
+  `,
+);
 
 export function FuncItem(props: FuncItemProps): ReactElement {
   const { className, label, func, isActive, ...other } = props;
+  const theme = useTheme();
 
   return (
     <StyledFuncButton
+      theme={theme}
       className={className}
       onClick={func}
       {...other}
@@ -74,9 +78,15 @@ export function FuncItem(props: FuncItemProps): ReactElement {
 
 export function FuncIconItem(props: FuncIconItemProps) {
   const { className, icon, label, func, ...other } = props;
+  const theme = useTheme();
   return (
-    <StyledFuncButton className={className} onClick={func} {...other}>
-      <IconCase>{icon}</IconCase>
+    <StyledFuncButton
+      theme={theme}
+      className={className}
+      onClick={func}
+      {...other}
+    >
+      <IconCase theme={theme}>{icon}</IconCase>
       {label}
     </StyledFuncButton>
   );
@@ -93,34 +103,42 @@ export const StyledFuncButton = styled.button<{
   isActive?: boolean;
   inActiveBackgroundColor?: string;
   activeBackgroundColor?: string;
+  theme: Theme;
 }>(
   ({
     isActive,
-    activeBackgroundColor = theme.defaultTheme.buttonHoverBackground,
-    inActiveBackgroundColor = theme.defaultTheme.buttonBackground,
+    theme,
+    activeBackgroundColor = theme.mode.buttonHoverBackground,
+    inActiveBackgroundColor = theme.mode.buttonBackground,
   }) => css`
     background-color: ${isActive
       ? activeBackgroundColor
       : inActiveBackgroundColor};
 
-    color: ${theme.defaultTheme.textPrimary};
+    color: ${theme.mode.buttonText};
 
     &:hover {
       background: ${activeBackgroundColor
         ? activeBackgroundColor
-        : theme.defaultTheme.buttonHoverBackground};
+        : theme.mode.buttonHoverBackground};
     }
     &:active {
-      background-color: ${theme.defaultTheme.menuActive};
+      background-color: ${theme.mode.menuActive};
       background-size: 100%;
       transition: background 0s;
     }
     transition: background 0.8s;
+
+    &:focus {
+      outline: none;
+    }
   `,
 );
 
-const IconCase = styled.i`
-  ${theme.flexLayout.column}
-  ${theme.flexLayout.center}
+const IconCase = styled.i<{ theme: Theme }>(
+  ({ theme }) => css`
+    ${theme.flexLayout.column}
+    ${theme.flexLayout.center}
   height: auto;
-`;
+  `,
+);

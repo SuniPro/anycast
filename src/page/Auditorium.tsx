@@ -6,9 +6,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SportsLeagueType } from "../model/Streams";
 import { useEffect, useState } from "react";
 import { ErrorAlert } from "../components/Alert/Alerts";
+import { useTheme } from "@emotion/react";
 
 export function Auditorium() {
   const { windowWidth } = useWindowContext();
+  const theme = useTheme();
   const { id } = useParams();
   const [leagueInfo, setLeagueInfo] = useState<SportsLeagueType>();
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ export function Auditorium() {
   if (!leagueInfo) return;
 
   return (
-    <PageWrapper width={windowWidth} marginTop={5} gap={0}>
+    <PageWrapper width={windowWidth} marginTop={5} gap={0} theme={theme}>
       <ScreenArea leagueInfo={leagueInfo} />
     </PageWrapper>
   );

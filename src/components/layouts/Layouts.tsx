@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import theme, { OPACITY_35 } from "../../styles/theme";
+import { css, Global, Theme, useTheme } from "@emotion/react";
+import { OPACITY_35 } from "../../styles/theme";
 import { Container } from "./Frames/FrameLayouts";
-import _ from "lodash";
 import { ReactNode } from "react";
+import { StyledImage } from "../styled/Image/Image";
+import AnyCastLogo from "../../assets/image/anyCast-logo.png";
 
 export const ASPECT_RATIO = {
   widesScreen: { w: 16, h: 9 },
@@ -13,40 +14,7 @@ export const ASPECT_RATIO = {
   WXGA: { w: 16, h: 10 },
 };
 
-export const Unshackled = styled.div<{ coordinate?: { x: number; y: number } }>(
-  ({ coordinate }) => css`
-    z-index: 1;
-    position: absolute;
-    right: 0;
-    top: ${coordinate ? coordinate.y + 300 : 0}px;
-
-    @media ${theme.deviceSize.phone} {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-  `,
-);
-
 /* LIST CONTAINER LAYOUTS -- START */
-export function viewSelector<T>(
-  windowWidth: number,
-  itemWidthList: T[],
-  viewLength: number,
-  viewPort?: number,
-) {
-  let width: number;
-
-  if (windowWidth <= theme.windowSize.HD) {
-    width = windowWidth - 100;
-  } else if (itemWidthList.length > viewLength) {
-    width = _.sum(itemWidthList.slice(0, viewLength));
-  } else {
-    width = viewPort ?? theme.windowSize.HD + 300;
-  }
-  return width;
-}
 
 export const ExhibitionContainer = styled.div<{
   width: number;
@@ -61,62 +29,69 @@ export const ExhibitionContainer = styled.div<{
   `,
 );
 
-export const MainTitleLine = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  
-  font-family: ${theme.fontStyle.montserrat};
-  }
-`;
+export const MainTitleLine = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
 
-export const MainTitle = styled.h2`
-  font-family: ${theme.defaultTheme.font.component.mainTitle};
-  color: ${theme.defaultTheme.textPrimary};
-`;
-
-export const ControlBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-
-  button {
-    margin: 0;
-    padding: 0;
-    width: 45px;
-    height: 35px;
-    background-position: center;
-    transition: background 0.8s;
-    ${theme.flexLayout.column}
-    ${theme.flexLayout.center}
-    
-
-    &:active {
-      background-color: ${theme.defaultTheme.buttonHoverBackground};
-      background-size: 100%;
-      transition: background 0s;
+        font-family: ${theme.fontStyle.montserrat};
     }
-  }
-  svg {
-    width: 20px;
-  }
-`;
+    `,
+);
+
+export const MainTitle = styled.h2<{ theme: Theme }>(
+  ({ theme }) => css`
+    font-family: ${theme.mode.font.component.mainTitle};
+    color: ${theme.mode.textPrimary};
+  `,
+);
+
+export const ControlBox = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+
+    button {
+      margin: 0;
+      padding: 0;
+      width: 45px;
+      height: 35px;
+      background-position: center;
+      transition: background 0.8s;
+
+      ${theme.flexLayout.column}
+      ${theme.flexLayout.center}
+            &:active {
+        background-color: ${theme.mode.buttonHoverBackground};
+        background-size: 100%;
+        transition: background 0s;
+      }
+    }
+
+    svg {
+      width: 20px;
+    }
+  `,
+);
 
 export const ItemContainer = styled(Container)<{
   activeScroll?: boolean;
   gap: number;
   height?: number;
+  theme: Theme;
 }>(
-  ({ activeScroll, gap, height }) => css`
+  ({ activeScroll, gap, height, theme }) => css`
     width: 100%;
     height: ${height ? `${height}px` : "100%"};
     overflow: hidden;
     flex-direction: row;
     flex-wrap: ${activeScroll ? "nowrap" : "wrap"};
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
 
     box-sizing: border-box;
     position: relative;
@@ -132,20 +107,25 @@ export const ItemContainer = styled(Container)<{
   `,
 );
 
-export const ItemCase = styled.div`
-  ${theme.flexLayout.column}
-  ${theme.flexLayout.center}
-  
-  gap : 8px;
-`;
+export const ItemCase = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    ${theme.flexLayout.column}
 
-export const Item = styled.div<{ width: number; height?: number }>(
-  ({ width, height }) => css`
+    gap: 8px;
+  `,
+);
+
+export const Item = styled.div<{
+  width: number;
+  height?: number;
+  theme: Theme;
+}>(
+  ({ width, height, theme }) => css`
     max-width: ${width}px;
     min-width: ${width}px;
     height: ${height ? `${height}px` : "100%"};
     border-radius: ${theme.borderRadius.roundedBox};
-    background-color: ${theme.defaultTheme.cardBackground};
+    background-color: ${theme.mode.cardBackground};
     ${theme.flexLayout.column};
     align-items: center;
     transition: all 0.3s ease-in-out;
@@ -153,7 +133,7 @@ export const Item = styled.div<{ width: number; height?: number }>(
     overflow: hidden;
 
     &:hover {
-      //box-shadow: 2px 4px 16px ${theme.defaultTheme.contentBackground};
+      //box-shadow: 2px 4px 16px ${theme.mode.contentBackground};
       transform: scale3d(1.01, 1.01, 1.01);
       //animation: tilt-shaking 80ms 10ms;
     }
@@ -178,92 +158,34 @@ export const Item = styled.div<{ width: number; height?: number }>(
   `,
 );
 
-export const DescriptionLine = styled.div`
-  width: 100%;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  ${theme.flexLayout.row};
-`;
+export const DescriptionLine = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    ${theme.flexLayout.row};
+  `,
+);
 
-export const ItemTitle = styled.span`
-  width: 100%;
-  ${theme.flexLayout.column};
-  justify-content: center;
-  align-items: flex-start;
-  color: ${theme.defaultTheme.textPrimary};
-  text-transform: uppercase;
-  font-family: ${theme.defaultTheme.font.component.itemTitle};
-  font-weight: 600;
-  font-size: 16px;
-  margin: 0;
-  text-align: left;
-`;
-
-export const ItemDescription = styled.span`
-  width: 100%;
-  height: 18px;
-  ${theme.flexLayout.column};
-  justify-content: center;
-  align-items: flex-start;
-  color: ${theme.defaultTheme.textSecondary};
-  text-transform: uppercase;
-  font-family: ${theme.defaultTheme.font.component.itemTitle};
-  font-weight: 600;
-  font-size: 14px;
-  margin: 0;
-  text-align: left;
-`;
-
-export const IFrameCase = styled.iframe<{ width: number; height: number }>(
-  ({ width, height }) => css`
-    width: ${width}px;
-    height: ${height}px;
-    border: none;
+export const ItemDescription = styled.span<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    height: 18px;
+    ${theme.flexLayout.column};
+    justify-content: center;
+    align-items: flex-start;
+    color: ${theme.mode.textSecondary};
+    text-transform: uppercase;
+    font-family: ${theme.mode.font.component.itemTitle};
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+    text-align: left;
   `,
 );
 
 /* LIST CONTAINER LAYOUTS -- END */
-
-/* PAGE COMPONENT LAYOUTS -- START */
-export const BasicScreen = styled.iframe<{
-  size: { width: number; height: number };
-}>(
-  ({ size }) => css`
-    width: ${size.width}px;
-    height: ${size.height}px;
-    border: none;
-  `,
-);
-
-/* PAGE COMPONENT LAYOUTS -- END */
-
-// export const SummaryTab = styled.div`
-//   background: ${theme.defaultTheme.cardBackground};
-//   color: ${theme.defaultTheme.textAccent};
-//   width: ${NAVIGATION_SUMMARY_WIDTH}px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   flex-shrink: 0;
-//   padding: 0 ${SUMMARY_PADDING_LEFT}px 0 ${SUMMARY_PADDING_RIGHT}px;
-//   height: 60px;
-// `;
-
-export const SummaryTitle = styled.div`
-  color: ${theme.defaultTheme.textPrimary};
-  text-align: center;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 16px; /* 114.286% */
-  white-space: nowrap;
-`;
-
-export const Divider = styled.div`
-  width: 1px;
-  height: 24px;
-  background: ${theme.defaultTheme.textSecondary};
-`;
 
 export function EllipsisCase(props: {
   text: ReactNode;
@@ -272,10 +194,11 @@ export function EllipsisCase(props: {
   width: number;
   func?: () => void;
 }) {
+  const theme = useTheme();
   const { text, className, width, testAlign, func } = props;
 
   return (
-    <TextCase className={className} onClick={func}>
+    <TextCase className={className} onClick={func} theme={theme}>
       <Text textAlign={testAlign} width={width}>
         {text}
       </Text>
@@ -283,12 +206,14 @@ export function EllipsisCase(props: {
   );
 }
 
-export const TextCase = styled.div`
-  width: 100%;
-  height: 100%;
-  ${theme.flexLayout.column}
-  ${theme.flexLayout.center}
-`;
+export const TextCase = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    height: 100%;
+    ${theme.flexLayout.column}
+    ${theme.flexLayout.center}
+  `,
+);
 
 export const Text = styled.span<{ width?: number; textAlign: string }>(
   ({ width, textAlign }) => css`
@@ -301,32 +226,71 @@ export const Text = styled.span<{ width?: number; textAlign: string }>(
   `,
 );
 
+export const ProfileCase = styled.div`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+`;
+
+export const Profile = styled(StyledImage)<{ theme: Theme }>(
+  ({ theme }) => css`
+    background-size: 40px;
+    border-radius: ${theme.borderRadius.roundedBox};
+  `,
+);
+
+export const InfoLine = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+
 export function SkeletonItemContainer(props: {
   width: number;
   height: number;
 }) {
   const { width, height } = props;
+  const theme = useTheme();
   return (
-    <ItemCase>
+    <ItemCase theme={theme}>
       <SkeletonItem
         width={width}
         itemWidth={width}
         itemHeight={height}
-      ></SkeletonItem>
-      <SkeletonPlaceholder width={300}></SkeletonPlaceholder>
+        theme={theme}
+      />
+      <DescriptionLine theme={theme}>
+        <ProfileCase>
+          <Profile
+            imageUrl={AnyCastLogo}
+            size={{
+              width: 40,
+              height: 40,
+            }}
+            theme={theme}
+          />
+        </ProfileCase>
+        <InfoLine>
+          <SkeletonPlaceholder width={300}></SkeletonPlaceholder>
+        </InfoLine>
+      </DescriptionLine>
     </ItemCase>
   );
 }
 
-const SkeletonItem = styled(Item)<{ itemWidth: number; itemHeight: number }>(
-  ({ itemWidth, itemHeight }) => css`
+const SkeletonItem = styled(Item)<{
+  itemWidth: number;
+  itemHeight: number;
+  theme: Theme;
+}>(
+  ({ itemWidth, itemHeight, theme }) => css`
     background: linear-gradient(90deg, #e8e8e8 0px, #f8f8f8 40px, #e8e8e8 80px);
     background-size: ${itemWidth}px ${itemHeight}px;
     width: ${itemWidth}px;
     height: ${itemHeight}px;
     border-radius: ${theme.borderRadius.roundedBox};
-    margin-top: 1.5rem;
-    animation: animation 1.5s infinite;
+    animation: animation 1s infinite;
 
     @keyframes animation {
       0% {
@@ -347,8 +311,8 @@ const SkeletonPlaceholder = styled.span<{ width: number }>(
     width: ${width}px;
     height: 1.45rem;
     border-radius: 3px;
-    margin-top: 1.5rem;
-    animation: animation 1.5s infinite;
+    margin-top: 10px;
+    animation: animation 1s infinite;
 
     @keyframes animation {
       0% {
@@ -362,8 +326,63 @@ const SkeletonPlaceholder = styled.span<{ width: number }>(
   `,
 );
 
-export const HorizontalDivider = styled.div`
-  border-bottom: 1px solid ${theme.defaultTheme.textSecondary + OPACITY_35};
-  margin-top: 13px;
-  width: 100%;
-`;
+export const HorizontalDivider = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    border-bottom: 1px solid ${theme.mode.textSecondary + OPACITY_35};
+    margin-top: 13px;
+    width: 100%;
+  `,
+);
+
+export function GlobalStyled() {
+  const theme = useTheme();
+  return (
+    <Global
+      styles={css`
+        width: 100%;
+        position: relative;
+
+        z-index: -1;
+        background-color: ${theme.mode.bodyBackground};
+
+        :root {
+          font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+          line-height: 1.5;
+          font-weight: 400;
+
+          color-scheme: light dark;
+
+          color: ${theme.mode.textPrimary};
+          background-color: ${theme.mode.bodyBackground};
+
+          font-synthesis: none;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+          margin: 0;
+          display: flex;
+          place-items: center;
+          min-width: 320px;
+          min-height: 100vh;
+          color: ${theme.mode.textPrimary};
+          background-color: ${theme.mode.bodyBackground};
+          cursor: none;
+        }
+
+        button {
+          border-radius: 8px;
+          border: 1px solid transparent;
+          padding: 0.6em 1.2em;
+          font-size: 1em;
+          font-weight: 500;
+          font-family: inherit;
+          background-color: #1a1a1a;
+          transition: border-color 0.25s;
+        }
+      `}
+    />
+  );
+}

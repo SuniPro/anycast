@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { AnimationControls, motion, useAnimationControls } from "framer-motion";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import theme from "../../../styles/theme";
+import { css, useTheme } from "@emotion/react";
 
 // const variantsForBubble = {
 //   animationOnCountChange: {
@@ -106,6 +105,7 @@ const variantsForSpark = {
 
 export function LikeButton(props: { rate: number; className?: string }) {
   const { rate, className } = props;
+  const theme = useTheme();
   const controlsForCountChange = useAnimationControls();
 
   const [count, setCount] = useState(rate);
@@ -196,8 +196,8 @@ export function LikeButton(props: { rate: number; className?: string }) {
           isContainerHovered
             ? "#DD2E44"
             : count !== 0
-            ? ""
-            : `${theme.defaultTheme.textSecondary}`
+              ? ""
+              : `${theme.mode.textSecondary}`
         }
       />
     </Container>

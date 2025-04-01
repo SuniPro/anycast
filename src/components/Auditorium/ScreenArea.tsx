@@ -6,23 +6,24 @@ import {
   tagSelector,
 } from "../../model/Streams";
 import styled from "@emotion/styled";
-import theme, { OPACITY_35 } from "../../styles/theme";
 import { HlsPlayer } from "../Video/HlsPlayer";
 import { ASPECT_RATIO } from "../layouts/Layouts";
 import { useWindowContext } from "../../Context/WindowContext";
-import { css } from "@emotion/react";
+import { css, Theme, useTheme } from "@emotion/react";
 import { useState } from "react";
 import { RecommendArea } from "./Recommend";
 import { StyledImage } from "../styled/Image/Image";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { LikeButton } from "../comunity/rank/LikeButton";
 import { useCursor } from "../../Context/CursorContext";
+import { OPACITY_35 } from "../../styles/theme";
 
 const SECTION_GAP = 20;
 export const SCREEN_CONTAINER_PADDING = 30;
 
 export function ScreenArea(props: { leagueInfo: SportsLeagueType }) {
   const { leagueInfo } = props;
+  const theme = useTheme();
   const { windowWidth } = useWindowContext();
   const [activeMenu, setActiveMenu] = useState<SPORTS_TYPE>("ALL");
 
@@ -36,14 +37,15 @@ export function ScreenArea(props: { leagueInfo: SportsLeagueType }) {
     windowWidth - screenW - SECTION_GAP - SCREEN_CONTAINER_PADDING * 2 - 4 - 10;
 
   return (
-    <ScreenContainer>
-      <ScreenBox>
+    <ScreenContainer theme={theme}>
+      <ScreenBox theme={theme}>
         <Screen
           streamUrl={leagueInfo.streamUrl}
           screenSize={{
             screenW,
             screenH,
           }}
+          theme={theme}
         />
         <ScreenInfo leagueInfo={leagueInfo} />
       </ScreenBox>
@@ -67,21 +69,23 @@ const ScreenDescriptionLine = styled.div`
   width: 100%;
 `;
 
-const ScreenBox = styled.div`
-  @media ${theme.deviceSize.tablet} {
-    width: 100%;
-    height: 100%;
-  }
+const ScreenBox = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    @media ${theme.deviceSize.tablet} {
+      width: 100%;
+      height: 100%;
+    }
 
-  @media ${theme.deviceSize.phone} {
-    width: 100%;
-    height: 100%;
-  }
-  gap: 6px;
-  box-sizing: border-box;
-  ${theme.flexLayout.center}
-  ${theme.flexLayout.column}
-`;
+    @media ${theme.deviceSize.phone} {
+      width: 100%;
+      height: 100%;
+    }
+    gap: 6px;
+    box-sizing: border-box;
+    ${theme.flexLayout.center}
+    ${theme.flexLayout.column}
+  `,
+);
 
 const ScreenContainer = styled.section`
   width: 100%;
@@ -89,22 +93,24 @@ const ScreenContainer = styled.section`
   gap: ${SECTION_GAP}px;
   padding: 0 ${SCREEN_CONTAINER_PADDING}px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  ${theme.flexLayout.row}
 `;
 
 function Screen(props: {
   streamUrl: string;
   screenSize: { screenW: number; screenH: number };
+  theme: Theme;
 }) {
-  const { streamUrl, screenSize } = props;
+  const { streamUrl, screenSize, theme } = props;
   const { screenW, screenH } = screenSize;
 
   return (
     <>
-      <ScreenBezel width={screenW} height={screenH}>
+      <ScreenBezel width={screenW} height={screenH} theme={theme}>
         <StyledHlsPlayer
           hlsPath={streamUrl}
           hlsPathSub={streamUrl}
@@ -113,31 +119,34 @@ function Screen(props: {
           autoPlay={true}
           muted={false}
           controls={true}
+          theme={theme}
         />
       </ScreenBezel>
     </>
   );
 }
 
-const StyledHlsPlayer = styled(HlsPlayer)`
-  @media ${theme.deviceSize.tablet} {
-    width: 100%;
-    height: 100%;
-  }
+const StyledHlsPlayer = styled(HlsPlayer)<{ theme: Theme }>(
+  ({ theme }) => css`
+    @media ${theme.deviceSize.tablet} {
+      width: 100%;
+      height: 100%;
+    }
 
-  @media ${theme.deviceSize.phone} {
-    width: 100%;
-    height: 100%;
-  }
-`;
+    @media ${theme.deviceSize.phone} {
+      width: 100%;
+      height: 100%;
+    }
+  `,
+);
 
-const ScreenBezel = styled.div<{ width: number; height: number }>(
-  ({ width, height }) => css`
+const ScreenBezel = styled.div<{ theme: Theme; width: number; height: number }>(
+  ({ theme, width, height }) => css`
     width: ${width}px;
     min-width: ${width}px;
     max-width: ${width}px;
     height: ${height}px;
-    border: 1px solid ${theme.defaultTheme.bodyBackground};
+    border: 1px solid ${theme.mode.bodyBackground};
     overflow: hidden;
     border-radius: 14px;
 
@@ -160,6 +169,7 @@ export function ScreenInfo(props: {
   dateSize?: number;
 }) {
   const { leagueInfo, dateSize } = props;
+  const theme = useTheme();
   const { setIsLike } = useCursor();
 
   const type = STREAMING_MENU_LIST.find(
@@ -248,10 +258,12 @@ export function ScreenInfo(props: {
             box-sizing: border-box;
             height: 60px;
             border-radius: ${theme.borderRadius.softBox};
+
             ul {
               margin: 0;
               padding: 0;
             }
+
             li {
               margin: 0;
               list-style: none;
@@ -268,11 +280,19 @@ export function ScreenInfo(props: {
               gap: 20px;
             `}
           >
-            <TagBox isLive={false}>{label}</TagBox>
+            <TagBox isLive={false} theme={theme}>
+              {label}
+            </TagBox>
             {leagueInfo.important ? (
-              <TagBox isLive={false}>주요경기</TagBox>
+              <TagBox isLive={false} theme={theme}>
+                주요경기
+              </TagBox>
             ) : null}
-            {leagueInfo.live ? <TagBox isLive={true}>LIVE</TagBox> : null}
+            {leagueInfo.live ? (
+              <TagBox isLive={true} theme={theme}>
+                LIVE
+              </TagBox>
+            ) : null}
             <div
               onMouseEnter={() => setIsLike(true)}
               onMouseLeave={() => setIsLike(false)}
@@ -286,19 +306,22 @@ export function ScreenInfo(props: {
   );
 }
 
-const TagBox = styled.li<{ isLive: boolean }>(
-  ({ isLive }) => css`
+const TagBox = styled.li<{ theme: Theme; isLive: boolean }>(
+  ({ theme, isLive }) => css`
     background-color: ${isLive
       ? theme.colors.warningRed
       : theme.colors.lightGray + OPACITY_35};
-    color: ${isLive ? theme.colors.white : theme.defaultTheme.textPrimary};
+    color: ${isLive ? theme.colors.white : theme.mode.textPrimary};
     border-radius: ${theme.borderRadius.roundedBox};
     font-family: ${theme.fontStyle.appleNeoBold};
+    white-space: nowrap;
     font-size: 18px;
     line-height: 26px;
-    padding: 5px 22px; // 위아래 5px = 총 10px 더 크게
+    padding: 8px 26px; // 위아래 5px = 총 10px 더 크게
     min-width: 50px;
-    ${theme.flexLayout.column}
-    ${theme.flexLayout.center}
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   `,
 );

@@ -1,23 +1,29 @@
 import { LogoIcon } from "../../Logo/LogoIcon";
 import styled from "@emotion/styled";
-import theme from "../../../styles/theme";
+import { css, Theme, useTheme } from "@emotion/react";
 
-export function EmptyPage() {
+export function EmptyPage(props: { title?: string; message?: string }) {
+  const { title, message } = props;
+  const theme = useTheme();
   return (
-    <Container>
+    <Container theme={theme}>
       <LogoIcon width={100 * 1.3} height={100} />
-      <EmptyTitle>현재 라이브 되는 방송이 없습니다.</EmptyTitle>
-      <h3>방송 스케줄을 확인해주세요 !</h3>
+      <EmptyTitle>
+        {title ? title : "현재 라이브 되는 방송이 없습니다."}
+      </EmptyTitle>
+      <h3>{message ? message : "방송 스케줄을 확인해주세요 !"}</h3>
     </Container>
   );
 }
 
-const Container = styled.div`
-  width: 100%;
-`;
+const Container = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    font-family: ${theme.fontStyle.koPubDotumBold};
+  `,
+);
 
 const EmptyTitle = styled.h2`
   font-size: 30px;
-  font-family: ${theme.fontStyle.koPubDotumBold};
   margin-top: 50px;
 `;

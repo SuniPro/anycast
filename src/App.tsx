@@ -9,28 +9,44 @@ import { Auditorium } from "./page/Auditorium";
 import { Toaster } from "react-hot-toast";
 import { Cursor } from "./utils/cursor/Cursor";
 import { CursorProvider } from "./Context/CursorContext";
+import { useDarkMode } from "usehooks-ts";
+import { ThemeProvider } from "@emotion/react";
+import { darkTheme, defaultTheme } from "./styles/theme";
+import { GlobalStyled } from "./components/layouts/Layouts";
+import { useEffect, useState } from "react";
 
 const QUERY_CLIENT = new QueryClient();
 
 function App() {
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const { isDarkMode } = useDarkMode();
+
+  useEffect(() => {
+    setDarkMode(isDarkMode);
+  }, [isDarkMode]);
+
   return (
-    <QueryClientProvider client={QUERY_CLIENT}>
-      <WindowContextProvider>
-        <SearchContextProvider>
-          <BrowserRouter>
-            <CursorProvider>
-              <Header />
-              <Routes>
-                <Route path="/" element={<Main />} />
-                <Route path="auditorium/:id?" element={<Auditorium />} />
-              </Routes>
-              <Cursor />
-            </CursorProvider>
-          </BrowserRouter>
-          <Toaster />
-        </SearchContextProvider>
-      </WindowContextProvider>
-    </QueryClientProvider>
+    <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>
+      <QueryClientProvider client={QUERY_CLIENT}>
+        <WindowContextProvider>
+          <SearchContextProvider>
+            <BrowserRouter>
+              <CursorProvider>
+                <Header darkState={{ darkMode, setDarkMode }} />
+                <Routes>
+                  <Route path="/" element={<Main />} />
+                  <Route path="auditorium/:id?" element={<Auditorium />} />
+                </Routes>
+                <Cursor />
+              </CursorProvider>
+            </BrowserRouter>
+            <Toaster />
+            <GlobalStyled />
+            <footer style={{ height: "40px" }}></footer>
+          </SearchContextProvider>
+        </WindowContextProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

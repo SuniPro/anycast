@@ -14,23 +14,24 @@ import {
   DescriptionLine,
   EllipsisCase,
   ExhibitionContainer,
+  InfoLine,
   Item,
   ItemCase,
   ItemContainer,
   ItemDescription,
   MainTitle,
   MainTitleLine,
+  Profile,
+  ProfileCase,
+  SkeletonItemContainer,
 } from "../layouts/Layouts";
 import { FuncItem } from "../styled/Button/Button";
 import { LeftArrowIcon, RightArrowIcon } from "../styled/icons";
 import { HlsPlayer } from "../Video/HlsPlayer";
 import { useItemResizing } from "../../hooks/useLayouts";
-import { css } from "@emotion/react";
+import { css, Theme, useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
-import theme from "../../styles/theme";
-
-import { StyledImage } from "../styled/Image/Image";
 import { EmptyPage } from "../styled/Empty/Empty";
 import Tooltip from "@mui/material/Tooltip";
 import { useSearchContext } from "../../Context/SearchContext";
@@ -47,8 +48,16 @@ export function Streams(props: {
   leagueInfoList: SportsLeagueType[];
   controls?: boolean;
   muted?: boolean;
+  isFetching: boolean;
 }) {
-  const { viewPort, leagueInfoList, title, titleView = true } = props;
+  const theme = useTheme();
+  const {
+    viewPort,
+    leagueInfoList,
+    title,
+    isFetching,
+    titleView = true,
+  } = props;
 
   const { windowWidth } = useWindowContext();
   const { searchValue } = useSearchContext();
@@ -98,7 +107,7 @@ export function Streams(props: {
 
   if (leagueInfoList.length === 0)
     return (
-      <PageWrapper width={windowWidth}>
+      <PageWrapper width={windowWidth} theme={theme}>
         <EmptyPage />
       </PageWrapper>
     );
@@ -107,13 +116,18 @@ export function Streams(props: {
     league.liveTitle.includes(searchValue),
   );
 
+  if (filteredLeagueInfoList.length === 0) {
+  }
+
   return (
-    <ComponentContainer ref={componentContainerRef}>
+    <ComponentContainer ref={componentContainerRef} theme={theme}>
       {titleView && (
-        <MainTitleLine>
-          <MainTitle onClick={() => navigate("/sports")}>{title}</MainTitle>
+        <MainTitleLine theme={theme}>
+          <MainTitle onClick={() => navigate("/sports")} theme={theme}>
+            {title}
+          </MainTitle>
           {viewPort && leagueInfoList.length > ITEM_VIEW_LENGTH && (
-            <ControlBox>
+            <ControlBox theme={theme}>
               <FuncItem func={leftButton} label={<LeftArrowIcon />} />
               <FuncItem func={rightButton} label={<RightArrowIcon />} />
             </ControlBox>
@@ -126,13 +140,24 @@ export function Streams(props: {
         activeScroll={!!viewPort}
       >
         {searchValue.length !== 0 && (
-          <ContentsArea
-            leagueList={filteredLeagueInfoList}
-            isView={true}
-            activeScroll={false}
-            itemWidth={itemWidth}
-            itemHeight={itemHeight}
-          />
+          <>
+            {filteredLeagueInfoList.length !== 0 ? (
+              <ContentsArea
+                leagueList={filteredLeagueInfoList}
+                isView={true}
+                activeScroll={false}
+                itemWidth={itemWidth}
+                itemHeight={itemHeight}
+                theme={theme}
+                isFetching={isFetching}
+              />
+            ) : (
+              <EmptyPage
+                title="검색결과가 없습니다."
+                message="검색어를 정확히 입력해주세요."
+              />
+            )}
+          </>
         )}
         <ContentsArea
           leagueList={leagueInfoList}
@@ -140,35 +165,21 @@ export function Streams(props: {
           itemWidth={itemWidth}
           itemHeight={itemHeight}
           isView={searchValue.length === 0}
+          theme={theme}
+          isFetching={isFetching}
         />
       </ExhibitionContainer>
     </ComponentContainer>
   );
 }
 
-const InfoLine = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
-const ProfileCase = styled.div`
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-`;
-
-const Profile = styled(StyledImage)`
-  background-size: 40px;
-  border-radius: ${theme.borderRadius.roundedBox};
-`;
-
-const StyledEllipsisCase = styled(EllipsisCase)`
-  font-family: ${theme.defaultTheme.font.component.itemTitle};
-  font-weight: bold;
-  font-size: 18px;
-`;
+const StyledEllipsisCase = styled(EllipsisCase)<{ theme: Theme }>(
+  ({ theme }) => css`
+    font-family: ${theme.mode.font.component.itemTitle};
+    font-weight: bold;
+    font-size: 18px;
+  `,
+);
 
 const StyledItem = styled(Item)<{ isMain: boolean }>(
   ({}) => css`
@@ -179,13 +190,23 @@ const StyledItem = styled(Item)<{ isMain: boolean }>(
 );
 
 function ContentsArea(props: {
+  theme: Theme;
   leagueList: SportsLeagueType[];
   isView: boolean;
   activeScroll: boolean;
   itemWidth: number;
   itemHeight: number;
+  isFetching: boolean;
 }) {
-  const { leagueList, activeScroll, itemWidth, itemHeight, isView } = props;
+  const {
+    theme,
+    leagueList,
+    activeScroll,
+    itemWidth,
+    itemHeight,
+    isView,
+    isFetching,
+  } = props;
 
   const { setIsPointer } = useCursor();
   const navigate = useNavigate();
@@ -195,60 +216,75 @@ function ContentsArea(props: {
       activeScroll={activeScroll}
       gap={ITEM_GAP}
       isView={isView}
+      theme={theme}
     >
-      {leagueList.map((league, index) => (
-        <Tooltip
-          title="제목을 누르면 극장모드로 볼 수 있어요 !"
-          placement="top"
-        >
-          <ItemCase>
-            <StyledItem key={index} width={itemWidth} isMain={activeScroll}>
-              <HlsPlayer
-                controls={true}
-                hlsPath={league.streamUrl}
-                hlsPathSub={league.streamUrlSub}
+      {isFetching ? (
+        <SkeletonItemContainer width={itemWidth} height={itemHeight} />
+      ) : (
+        leagueList.map((league, index) => (
+          <Tooltip
+            title="제목을 누르면 극장모드로 볼 수 있어요 !"
+            placement="top"
+          >
+            <ItemCase theme={theme}>
+              <StyledItem
+                key={index}
                 width={itemWidth}
-                height={itemHeight}
-                muted={true}
-              />
-            </StyledItem>
-            <DescriptionLine
-              onMouseEnter={() => setIsPointer(true)}
-              onMouseLeave={() => setIsPointer(false)}
-              onClick={() => navigate(`auditorium/${league.id}`)}
-            >
-              <ProfileCase>
-                <Profile
-                  imageUrl={
-                    league.thumbnailUrl
-                      ? league.thumbnailUrl
-                      : tagSelector(
-                          league.streamUrl,
-                          league.sportsType,
-                          league.sportsTypeSub,
-                        )
-                  }
-                  size={{
-                    width: 40,
-                    height: 40,
-                  }}
+                isMain={activeScroll}
+                theme={theme}
+              >
+                <HlsPlayer
+                  controls={true}
+                  hlsPath={league.streamUrl}
+                  hlsPathSub={league.streamUrlSub}
+                  width={itemWidth}
+                  height={itemHeight}
+                  muted={true}
                 />
-              </ProfileCase>
-              <InfoLine>
-                <StyledEllipsisCase
-                  width={itemWidth - 50}
-                  text={league.liveTitle}
-                  testAlign="left"
-                />
-                <ItemDescription>{league.channelName}</ItemDescription>
-                <ItemDescription>
-                  {iso8601ToYYMMDDHHMM(league.leagueDate)}
-                </ItemDescription>
-              </InfoLine>
-            </DescriptionLine>
-          </ItemCase>
-        </Tooltip>
-      ))}
+              </StyledItem>
+              <DescriptionLine
+                onMouseEnter={() => setIsPointer(true)}
+                onMouseLeave={() => setIsPointer(false)}
+                onClick={() => navigate(`auditorium/${league.id}`)}
+                theme={theme}
+              >
+                <ProfileCase>
+                  <Profile
+                    imageUrl={
+                      league.thumbnailUrl
+                        ? league.thumbnailUrl
+                        : tagSelector(
+                            league.streamUrl,
+                            league.sportsType,
+                            league.sportsTypeSub,
+                          )
+                    }
+                    size={{
+                      width: 40,
+                      height: 40,
+                    }}
+                    theme={theme}
+                  />
+                </ProfileCase>
+                <InfoLine>
+                  <StyledEllipsisCase
+                    width={itemWidth - 50}
+                    text={league.liveTitle}
+                    testAlign="left"
+                    theme={theme}
+                  />
+                  <ItemDescription theme={theme}>
+                    {league.channelName}
+                  </ItemDescription>
+                  <ItemDescription theme={theme}>
+                    {iso8601ToYYMMDDHHMM(league.leagueDate)}
+                  </ItemDescription>
+                </InfoLine>
+              </DescriptionLine>
+            </ItemCase>
+          </Tooltip>
+        ))
+      )}
     </VisualItemContainer>
   );
 }

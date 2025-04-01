@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import "rsuite/Sidenav/styles/index.css";
 import "rsuite/Nav/styles/index.css";
 import { useState } from "react";
@@ -16,12 +15,12 @@ import {
   PageWrapper,
 } from "../components/layouts/Frames/FrameLayouts";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import theme from "../styles/theme";
+import { css, Theme, useTheme } from "@emotion/react";
 import { SPORTS_TYPE, STREAMING_MENU_LIST } from "../model/Streams";
 import { useProportionHook } from "../hooks/useWindowHooks";
 
 export function Main() {
+  const theme = useTheme();
   const { windowWidth } = useWindowContext();
   const [activeMenu, setActiveMenu] = useState<SPORTS_TYPE>("ALL");
 
@@ -60,8 +59,8 @@ export function Main() {
   if (!leagueList) return;
 
   return (
-    <Wrapper>
-      <PageWrapper width={windowWidth - 100} gap={0}>
+    <Wrapper theme={theme}>
+      <PageWrapper width={windowWidth - 100} gap={0} theme={theme}>
         <Navigation
           menuList={STREAMING_MENU_LIST}
           activeMenu={activeMenu}
@@ -70,11 +69,7 @@ export function Main() {
           navigationContainerWidth={navigationContainer.size}
           justifyContent="center"
         />
-        <ComponentContainer
-          css={css`
-            gap: 40px;
-          `}
-        >
+        <StyledComponentContainer>
           {allImportantLeague && allImportantLeague.length > 0 && (
             <Streams
               viewPort={windowWidth}
@@ -82,6 +77,7 @@ export function Main() {
               leagueInfoList={allImportantLeague}
               controls={true}
               muted={true}
+              isFetching={false}
             />
           )}
           <Streams
@@ -89,16 +85,27 @@ export function Main() {
             leagueInfoList={leagueList}
             controls={true}
             muted={true}
+            isFetching={false}
           />
-        </ComponentContainer>
+        </StyledComponentContainer>
       </PageWrapper>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.section`
-  width: 100%;
+const Wrapper = styled.section<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: ${theme.mode.textPrimary};
 
-  ${theme.flexLayout.row}
-  ${theme.flexLayout.center}
+    background-color: ${theme.mode.bodyBackground};
+  `,
+);
+
+const StyledComponentContainer = styled(ComponentContainer)`
+  gap: 40px;
 `;

@@ -9,6 +9,9 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SportsHandballIcon from "@mui/icons-material/SportsHandball";
 
 import LolLogo from "../assets/image/lol_logo.png";
+import PingPong from "../assets/image/pingpong.png";
+import StarCraftLogo from "../assets/image/starcraft.webp";
+import TennisBall from "../assets/image/tennisBall.png";
 import BasketBall from "../assets/image/basketBall.png";
 import HandBall from "../assets/image/handBall.png";
 import SoccerBall from "../assets/image/soccer-ball-svgrepo-com.png";
@@ -47,6 +50,10 @@ export const tagSelector = (
       return Hockey;
     case "HANDBALL":
       return HandBall;
+    case "TENNIS":
+      return TennisBall;
+    case "PINGPONG":
+      return PingPong;
     case "FOOTBALL":
       return AmericanFootBall;
     case "ESPORTS":
@@ -56,6 +63,8 @@ export const tagSelector = (
         return LPLLogo;
       } else if (subType === "LWC") {
         return LWCLogo;
+      } else if (subType === "Starcraft") {
+        return StarCraftLogo;
       } else {
         return LolLogo;
       }
@@ -86,6 +95,7 @@ export type SPORTS_TYPE =
   | "FOOTBALL"
   | "ESPORTS"
   | "TENNIS"
+  | "PINGPONG"
   | "HANDBALL"
   | "UFC"
   | "ETC";
@@ -102,6 +112,7 @@ export const STREAMING_MENU_LIST = [
   { menu: "HANDBALL", label: "핸드볼" },
   { menu: "UFC", label: "UFC" },
   { menu: "TENNIS", label: "테니스" },
+  { menu: "PINGPONG", label: "탁구" },
 ];
 
 export const SPORTS_TYPE_LIST = [

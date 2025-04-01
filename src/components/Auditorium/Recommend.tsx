@@ -19,6 +19,7 @@ import { EmptyPage } from "../styled/Empty/Empty";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { ThumbnailViewer } from "../Video/ThumbnailViewer";
 import { HlsPlayer } from "../Video/HlsPlayer";
+import { useCursor } from "../../Context/CursorContext";
 
 const NAVIGATION_PADDING = 10;
 
@@ -35,6 +36,7 @@ export function RecommendArea(props: ActiveMenuStateType) {
   const theme = useTheme();
   const { width, height } = props;
   const { windowWidth } = useWindowContext();
+  const { setIsPointer } = useCursor();
   const navigate = useNavigate();
   const { activeMenu, setActiveMenu } = props.activeMenuState;
   const isTablet = windowWidth < theme.windowSize.tablet;
@@ -97,12 +99,13 @@ export function RecommendArea(props: ActiveMenuStateType) {
           navigationContainerWidth={navigationContainer.size}
         />
       </div>
-
       <RecommendContentsContainer theme={theme}>
         {leagueListByType ? (
           leagueListByType.length > 0 ? (
             leagueListByType.map((league, index) => (
               <ContentsLine
+                onMouseEnter={() => setIsPointer(true)}
+                onMouseLeave={() => setIsPointer(false)}
                 key={index}
                 onClick={() => navigate(`/auditorium/${league.id}`)}
                 theme={theme}
@@ -202,10 +205,6 @@ const ContentsLine = styled.div<{ theme: Theme }>(
     box-sizing: border-box;
     justify-content: space-between;
     align-items: flex-start;
-
-    cursor:
-      url("../Logo/anyCast-logo-small.svg") 2 2,
-      auto;
 
     gap: 8px;
     ${theme.flexLayout.row}

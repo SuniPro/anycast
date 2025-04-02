@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css, Theme, useTheme } from "@emotion/react";
 import { LogoIcon, LogoText } from "../Logo/LogoIcon";
 import styled from "@emotion/styled";
@@ -58,29 +57,18 @@ export function Header(props: {
         {isDeskTop ? <LogoText /> : <LogoIcon width={40 * 1.3} height={40} />}
       </LogoContainer>
       <SearchBar width={windowWidth / 2} height={35} />
-      <div
-        css={css`
-          display: flex;
-          flex-direction: row;
-          gap: 6px;
-
-          li {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-          }
-        `}
-      >
+      <FunctionLine>
         <li>
-          <FuncIconItem
+          <StyledFuncIconItem
             func={() => setScheduleListOpen((prev) => !prev)}
             icon={<EventNoteIcon />}
             isActive={scheduleListOpen}
+            theme={theme}
             label={<></>}
           />
         </li>
         <li>
-          <FuncIconItem
+          <StyledFuncIconItem
             func={() => setDarkMode((prev) => !prev)}
             isActive={false}
             icon={
@@ -91,9 +79,10 @@ export function Header(props: {
               )
             }
             label={<></>}
+            theme={theme}
           />
         </li>
-      </div>
+      </FunctionLine>
       <ScheduleListModal
         open={scheduleListOpen}
         close={() => setScheduleListOpen(false)}
@@ -101,6 +90,29 @@ export function Header(props: {
     </HeaderWrapper>
   );
 }
+
+const FunctionLine = styled.section`
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+`;
+
+const StyledFuncIconItem = styled(FuncIconItem)<{ theme: Theme }>(
+  ({ theme }) => css`
+    @media ${theme.deviceSize.phone} {
+      padding: 0;
+      margin: 0;
+      width: 44px;
+      height: 44px;
+    }
+  `,
+);
 
 export function ScheduleListModal(props: { open: boolean; close: () => void }) {
   const { open, close } = props;
@@ -114,8 +126,6 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
 
   const { windowWidth } = useWindowContext();
   const { size } = useProportionHook(windowWidth, 700, theme.windowSize.tablet);
-
-  const isMobile = windowWidth <= theme.windowSize.mobile;
 
   const sortedLeagueList = leagueList?.sort((a, b) => {
     const aDate = new Date(a.leagueDate).getTime();
@@ -134,10 +144,7 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
         <ModalContainer width={size} theme={theme}>
           {sortedLeagueList?.map((leagueInfo) => (
             <>
-              <ScreenInfo
-                leagueInfo={leagueInfo}
-                dateSize={isMobile ? 12 : 16}
-              />
+              <ScreenInfo leagueInfo={leagueInfo} dateSize={14} />
               <HorizontalDivider theme={theme} />
             </>
           ))}
@@ -189,6 +196,10 @@ export const HeaderWrapper = styled.header<{ theme: Theme }>(
       li {
         padding: 0;
       }
+    }
+
+    @media ${theme.deviceSize.phone} {
+      padding: 10px 4px;
     }
   `,
 );

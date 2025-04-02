@@ -31,15 +31,19 @@ export const ExhibitionContainer = styled.div<{
 
 export const MainTitleLine = styled.div<{ theme: Theme }>(
   ({ theme }) => css`
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
-        font-family: ${theme.fontStyle.montserrat};
+    font-family: ${theme.fontStyle.montserrat};
+
+    // 모바일 환경에서 타이틀이 화면 끝에 붙는걸 방지합니다.
+    @media ${theme.deviceSize.phone} {
+      width: 90%;
     }
-    `,
+  `,
 );
 
 export const MainTitle = styled.h2<{ theme: Theme }>(
@@ -99,6 +103,8 @@ export const ItemContainer = styled(Container)<{
 
     @media ${theme.deviceSize.phone} {
       justify-content: ${activeScroll ? "flex-start" : "center"};
+      // 모바일 환경에서 각 아이템 케이스들의 간격을 40으로 조정합니다.
+      gap: 40px;
     }
 
     @media ${theme.deviceSize.tablet} {
@@ -110,6 +116,9 @@ export const ItemContainer = styled(Container)<{
 export const ItemCase = styled.div`
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
 
   gap: 8px;
 `;
@@ -154,6 +163,11 @@ export const Item = styled.div<{
         transform: rotate(0deg);
       }
     }
+
+    // 모바일 환경에서는 아이템에 곡률이 적용되지 않고 화면을 수평으로 가득 채웁니다.
+    @media ${theme.deviceSize.phone} {
+      border-radius: 0;
+    }
   `,
 );
 
@@ -166,6 +180,21 @@ export const DescriptionLine = styled.div`
   flex-direction: row;
 `;
 
+export const ItemTitle = styled.h3<{
+  theme: Theme;
+  fontSize: number;
+  paddingBottom: number;
+}>(
+  ({ theme, fontSize, paddingBottom }) => css`
+    font-size: ${fontSize}px;
+    text-align: left;
+    font-family: ${theme.fontStyle.nanumGothic};
+    font-weight: 800;
+    margin: 0;
+    padding: 0 0 ${paddingBottom}px;
+  `,
+);
+
 export const ItemDescription = styled.span<{ theme: Theme }>(
   ({ theme }) => css`
     width: 100%;
@@ -175,11 +204,15 @@ export const ItemDescription = styled.span<{ theme: Theme }>(
     align-items: flex-start;
     color: ${theme.mode.textSecondary};
     text-transform: uppercase;
-    font-family: ${theme.mode.font.component.itemTitle};
+    font-family: ${theme.mode.font.component.itemDescription};
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     margin: 0;
     text-align: left;
+
+    @media ${theme.deviceSize.phone} {
+      font-size: 12px;
+    }
   `,
 );
 
@@ -228,6 +261,11 @@ export const ProfileCase = styled.div`
   width: 40px;
   height: 40px;
   margin-right: 10px;
+
+  // 모바일 환경에서 프로필 라인이 왼쪽 끝에 붙는것을 방지합니다.
+  @media screen and (max-width: 645px) {
+    padding-left: 10px;
+  }
 `;
 
 export const Profile = styled(StyledImage)<{ theme: Theme }>(

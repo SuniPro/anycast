@@ -84,7 +84,10 @@ export function Navigation(props: NavigationPropsType) {
   ];
 
   const scrollXValue = calculateScrollX(
-    navigationContainerWidth,
+    /*실제 container는 width가 100%로 적용되어 있으므로,ref.current.offsetWidth를 기본 반영하나,
+     * 만약 없을 경우는 직접 계산한 navigationContainerWidth를 반영합니다.
+     * */
+    ref.current ? ref.current.offsetWidth : navigationContainerWidth,
     itemWidthList,
     menuList.findIndex((row) => activeMenu === row.menu),
   );
@@ -93,7 +96,6 @@ export function Navigation(props: NavigationPropsType) {
   return (
     <Container
       ref={ref}
-      width={navigationContainerWidth}
       className={className}
       justifyContent={justifyContent}
       theme={theme}
@@ -134,13 +136,12 @@ export function Navigation(props: NavigationPropsType) {
 }
 
 const Container = styled.div<{
-  width: number;
   justifyContent?: string;
   theme: Theme;
 }>(
-  ({ width, justifyContent, theme }) => css`
+  ({ justifyContent, theme }) => css`
     cursor: none;
-    width: ${width}px;
+    width: 100%;
     display: flex;
     height: 60px;
     padding: 0 ${CONTAINER_PADDING}px;

@@ -12,13 +12,13 @@ import {
   ASPECT_RATIO,
   ControlBox,
   DescriptionLine,
-  EllipsisCase,
   ExhibitionContainer,
   InfoLine,
   Item,
   ItemCase,
   ItemContainer,
   ItemDescription,
+  ItemTitle,
   MainTitle,
   MainTitleLine,
   Profile,
@@ -69,6 +69,7 @@ export function Streams(props: {
       : windowWidth - 100,
   );
   const navigate = useNavigate();
+  const isMobile = windowWidth <= theme.windowSize.mobile;
 
   useEffect(() => {
     setComponentWidth(
@@ -81,7 +82,7 @@ export function Streams(props: {
   const { itemWidth, isTablet, moveParam } = useItemResizing(
     windowWidth,
     componentWidth,
-    ITEM_GAP,
+    isMobile ? 0 : ITEM_GAP,
     ITEM_VIEW_LENGTH,
     MOVE_FACTOR,
   );
@@ -135,7 +136,7 @@ export function Streams(props: {
         </MainTitleLine>
       )}
       <ExhibitionContainer
-        width={isTablet ? itemWidth * 1.03 : componentWidth}
+        width={isTablet ? itemWidth : componentWidth}
         ref={containerRef}
         activeScroll={!!viewPort}
       >
@@ -173,14 +174,6 @@ export function Streams(props: {
   );
 }
 
-const StyledEllipsisCase = styled(EllipsisCase)<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-family: ${theme.mode.font.component.itemTitle};
-    font-weight: bold;
-    font-size: 18px;
-  `,
-);
-
 const StyledItem = styled(Item)<{ isMain: boolean }>(
   ({}) => css`
     position: relative;
@@ -207,6 +200,10 @@ function ContentsArea(props: {
     isView,
     isFetching,
   } = props;
+
+  const { windowWidth } = useWindowContext();
+
+  const isMobile = windowWidth <= theme.windowSize.mobile;
 
   const { setIsPointer } = useCursor();
   const navigate = useNavigate();
@@ -237,8 +234,8 @@ function ContentsArea(props: {
                   controls={true}
                   hlsPath={league.streamUrl}
                   hlsPathSub={league.streamUrlSub}
-                  width={itemWidth}
-                  height={itemHeight}
+                  width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+                  height={itemHeight + (isMobile ? ITEM_GAP : 0)}
                   muted={true}
                 />
               </StyledItem>
@@ -267,12 +264,13 @@ function ContentsArea(props: {
                   />
                 </ProfileCase>
                 <InfoLine>
-                  <StyledEllipsisCase
-                    width={itemWidth - 50}
-                    text={league.liveTitle}
-                    testAlign="left"
+                  <ItemTitle
                     theme={theme}
-                  />
+                    fontSize={isMobile ? 15 : 18}
+                    paddingBottom={0}
+                  >
+                    {league.liveTitle}
+                  </ItemTitle>
                   <ItemDescription theme={theme}>
                     {league.channelName}
                   </ItemDescription>

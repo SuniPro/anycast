@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import {
   SPORTS_TYPE,
   SportsLeagueType,
@@ -7,7 +6,7 @@ import {
 } from "../../model/Streams";
 import styled from "@emotion/styled";
 import { HlsPlayer } from "../Video/HlsPlayer";
-import { ASPECT_RATIO } from "../layouts/Layouts";
+import { ASPECT_RATIO, ItemDescription, ItemTitle } from "../layouts/Layouts";
 import { useWindowContext } from "../../Context/WindowContext";
 import { css, Theme, useTheme } from "@emotion/react";
 import { useState } from "react";
@@ -26,7 +25,7 @@ export function ScreenArea(props: { leagueInfo: SportsLeagueType }) {
   const theme = useTheme();
   const { windowWidth } = useWindowContext();
   const [activeMenu, setActiveMenu] = useState<SPORTS_TYPE>("ALL");
-
+  const isMobile = windowWidth <= theme.windowSize.mobile;
   const screenW = windowWidth / 1.5;
   const screenH =
     (screenW / ASPECT_RATIO.widesScreen.w) * ASPECT_RATIO.widesScreen.h;
@@ -37,7 +36,7 @@ export function ScreenArea(props: { leagueInfo: SportsLeagueType }) {
     windowWidth - screenW - SECTION_GAP - SCREEN_CONTAINER_PADDING * 2 - 4 - 10;
 
   return (
-    <ScreenContainer theme={theme}>
+    <ScreenContainer theme={theme} isMobile={isMobile}>
       <ScreenBox theme={theme}>
         <Screen
           streamUrl={leagueInfo.streamUrl}
@@ -67,6 +66,11 @@ const ScreenDescriptionLine = styled.div`
   align-items: flex-start;
 
   width: 100%;
+
+  @media screen and (max-width: 645px) {
+    box-sizing: border-box;
+    padding: 0 0 0 10px;
+  }
 `;
 
 const ScreenBox = styled.div<{ theme: Theme }>(
@@ -87,18 +91,20 @@ const ScreenBox = styled.div<{ theme: Theme }>(
   `,
 );
 
-const ScreenContainer = styled.section`
-  width: 100%;
+const ScreenContainer = styled.section<{ isMobile: boolean }>(
+  ({ isMobile }) => css`
+    width: 100%;
 
-  gap: ${SECTION_GAP}px;
-  padding: 0 ${SCREEN_CONTAINER_PADDING}px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-`;
+    gap: ${SECTION_GAP}px;
+    padding: 0 ${isMobile ? 0 : SCREEN_CONTAINER_PADDING}px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  `,
+);
 
 function Screen(props: {
   streamUrl: string;
@@ -160,6 +166,7 @@ const ScreenBezel = styled.div<{ theme: Theme; width: number; height: number }>(
       width: 100%;
       height: 100%;
       max-width: 100%;
+      border-radius: 0;
     }
   `,
 );
@@ -167,6 +174,7 @@ const ScreenBezel = styled.div<{ theme: Theme; width: number; height: number }>(
 export function ScreenInfo(props: {
   leagueInfo: SportsLeagueType;
   dateSize?: number;
+  infoFontSize?: number;
 }) {
   const { leagueInfo, dateSize } = props;
   const { windowWidth } = useWindowContext();
@@ -183,38 +191,13 @@ export function ScreenInfo(props: {
 
   return (
     <ScreenDescriptionLine>
-      <h3
-        css={css`
-          font-size: 22px;
-          font-family: ${theme.fontStyle.nanumGothic};
-          font-weight: 800;
-          margin: 0;
-          padding: 0 0 5px 0;
-        `}
-      >
+      <ItemTitle theme={theme} fontSize={isMobile ? 18 : 22} paddingBottom={5}>
         {leagueInfo.liveTitle}
-      </h3>
-      <div
-        css={css`
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-
-          @media ${theme.deviceSize.phone} {
-            flex-direction: column;
-          }
-        `}
-      >
-        <div
-          css={css`
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-          `}
-        >
+      </ItemTitle>
+      <InfoContainer theme={theme}>
+        <InfoLine>
           <div>
-            <StyledImage
+            <Profile
               imageUrl={
                 leagueInfo.thumbnailUrl
                   ? leagueInfo.thumbnailUrl
@@ -228,80 +211,21 @@ export function ScreenInfo(props: {
                 width: profileSize,
                 height: profileSize,
               }}
-              css={css`
-                background-size: ${profileSize}px;
-                border-radius: ${theme.borderRadius.roundedBox};
-              `}
+              profileSize={profileSize}
+              theme={theme}
             />
           </div>
-          <div
-            css={css`
-              width: 100%;
-              display: flex;
-              flex-direction: column;
-              justify-content: flex-start;
-              margin-left: 10px;
-            `}
-          >
-            <span
-              css={css`
-                font-family: ${theme.fontStyle.appleNeoBold};
-                padding: 0;
-                margin: 0;
-                font-size: ${isMobile ? 14 : 20}px;
-                text-align: left;
-              `}
-            >
+          <DescriptionBox>
+            <StyledItemDescription theme={theme} fontSize={dateSize}>
               {leagueInfo.channelName}
-            </span>
-            <span
-              css={css`
-                font-family: ${theme.fontStyle.koPubDotumMedium};
-                padding: 0;
-                margin: 0;
-                font-size: ${dateSize ? dateSize : isMobile ? 12 : 16}px;
-                text-align: left;
-              `}
-            >
+            </StyledItemDescription>
+            <StyledItemDescription theme={theme} fontSize={dateSize}>
               {iso8601ToYYMMDDHHMM(leagueInfo.leagueDate)}
-            </span>
-          </div>
-        </div>
-
-        <div
-          css={css`
-            width: 50%;
-            padding: 0 20px;
-            box-sizing: border-box;
-            height: 60px;
-            border-radius: ${theme.borderRadius.softBox};
-
-            ul {
-              margin: 0;
-              padding: 0;
-            }
-
-            li {
-              margin: 0;
-              list-style: none;
-            }
-
-            @media ${theme.deviceSize.phone} {
-              width: 100%;
-            }
-          `}
-        >
-          <ul
-            css={css`
-              width: 100%;
-              display: flex;
-              flex-direction: row;
-              flex-wrap: nowrap;
-              justify-content: flex-end;
-              align-items: center;
-              gap: 20px;
-            `}
-          >
+            </StyledItemDescription>
+          </DescriptionBox>
+        </InfoLine>
+        <TagLine theme={theme}>
+          <TagBoxList>
             <TagBox isLive={false} theme={theme}>
               {label}
             </TagBox>
@@ -321,12 +245,18 @@ export function ScreenInfo(props: {
             >
               <LikeButton rate={0} />
             </div>
-          </ul>
-        </div>
-      </div>
+          </TagBoxList>
+        </TagLine>
+      </InfoContainer>
     </ScreenDescriptionLine>
   );
 }
+
+const StyledItemDescription = styled(ItemDescription)<{ fontSize?: number }>(
+  ({ fontSize }) => css`
+    font-size: ${fontSize}px !important;
+  `,
+);
 
 const TagBox = styled.li<{ theme: Theme; isLive: boolean }>(
   ({ theme, isLive }) => css`
@@ -352,3 +282,72 @@ const TagBox = styled.li<{ theme: Theme; isLive: boolean }>(
     }
   `,
 );
+
+const InfoContainer = styled.div<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    @media ${theme.deviceSize.phone} {
+      flex-direction: column;
+    }
+  `,
+);
+
+const InfoLine = styled.section`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+`;
+
+const Profile = styled(StyledImage)<{ theme: Theme; profileSize: number }>(
+  ({ theme, profileSize }) => css`
+    background-size: ${profileSize}px;
+    background-color: ${theme.mode.textPrimary};
+    border-radius: ${theme.borderRadius.roundedBox};
+  `,
+);
+
+const DescriptionBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 10px;
+`;
+
+const TagLine = styled.section<{ theme: Theme }>(
+  ({ theme }) => css`
+    width: 50%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 60px;
+    border-radius: ${theme.borderRadius.softBox};
+
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin: 0;
+      list-style: none;
+    }
+
+    @media ${theme.deviceSize.phone} {
+      width: 100%;
+    }
+  `,
+);
+
+const TagBoxList = styled.ul`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+`;

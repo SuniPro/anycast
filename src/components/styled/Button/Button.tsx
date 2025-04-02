@@ -117,6 +117,14 @@ export const StyledFuncButton = styled.button<{
 
     color: ${theme.mode.buttonText};
 
+    margin: 0;
+    padding: 0.6em 1.2em;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     &:hover {
       background: ${activeBackgroundColor
         ? activeBackgroundColor

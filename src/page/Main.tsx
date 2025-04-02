@@ -24,13 +24,14 @@ export function Main() {
   const { windowWidth } = useWindowContext();
   const [activeMenu, setActiveMenu] = useState<SPORTS_TYPE>("ALL");
 
+  const isAllType = activeMenu === "ALL";
+  const isMobile = windowWidth <= theme.windowSize.mobile;
+
   const { data: allImportantLeague } = useQuery({
     queryKey: ["getAllImportantSportsStreams"],
     queryFn: () => getAllImportantSportsStreams(),
     refetchInterval: 100000,
   });
-
-  const isAllType = activeMenu === "ALL";
 
   const { data: leagueList } = useQuery({
     queryKey: isAllType
@@ -52,22 +53,27 @@ export function Main() {
 
   const navigationContainer = useProportionHook(
     windowWidth,
-    windowWidth - 50,
-    windowWidth - 50,
+    // 모바일 환경에서는 여백이 없으므로 0을 반영합니다.
+    windowWidth - (isMobile ? 0 : 100),
+    windowWidth - (isMobile ? 0 : 100),
   );
 
   if (!leagueList) return;
 
   return (
     <Wrapper theme={theme}>
-      <PageWrapper width={windowWidth - 100} gap={0} theme={theme}>
+      <PageWrapper
+        width={isMobile ? windowWidth : windowWidth - 100}
+        gap={0}
+        theme={theme}
+      >
         <Navigation
           menuList={STREAMING_MENU_LIST}
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
           navigationItemWidth={navigationItemWidth.size}
           navigationContainerWidth={navigationContainer.size}
-          justifyContent="center"
+          justifyContent="flex-start"
         />
         <StyledComponentContainer>
           {allImportantLeague && allImportantLeague.length > 0 && (

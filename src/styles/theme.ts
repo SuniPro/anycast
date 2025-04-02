@@ -210,7 +210,8 @@ const defaultMode = {
     search: fontStyle.yesGothicMedium,
     component: {
       mainTitle: fontStyle.montserrat,
-      itemTitle: fontStyle.sCoreDreamBold,
+      itemTitle: fontStyle.nanumGothic,
+      itemDescription: fontStyle.yesGothicMedium,
     },
     dynamicIsland: {
       stateView: fontStyle.yesGothicExtraBold,
@@ -280,7 +281,8 @@ const darkMode = {
     },
     component: {
       mainTitle: fontStyle.montserrat,
-      itemTitle: fontStyle.sCoreDreamBold,
+      itemTitle: fontStyle.nanumGothic,
+      itemDescription: fontStyle.yesGothicMedium,
     },
     search: fontStyle.yesGothicMedium,
     dynamicIsland: {

@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { SportsLeagueType, tagSelector } from "../../model/Streams";

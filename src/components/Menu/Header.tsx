@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css, Theme, useTheme } from "@emotion/react";
 import { LogoIcon, LogoText } from "../Logo/LogoIcon";
 import styled from "@emotion/styled";
@@ -58,19 +57,7 @@ export function Header(props: {
         {isDeskTop ? <LogoText /> : <LogoIcon width={40 * 1.3} height={40} />}
       </LogoContainer>
       <SearchBar width={windowWidth / 2} height={35} />
-      <div
-        css={css`
-          display: flex;
-          flex-direction: row;
-          gap: 6px;
-
-          li {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-          }
-        `}
-      >
+      <FunctionLine>
         <li>
           <StyledFuncIconItem
             func={() => setScheduleListOpen((prev) => !prev)}
@@ -95,7 +82,7 @@ export function Header(props: {
             theme={theme}
           />
         </li>
-      </div>
+      </FunctionLine>
       <ScheduleListModal
         open={scheduleListOpen}
         close={() => setScheduleListOpen(false)}
@@ -103,6 +90,18 @@ export function Header(props: {
     </HeaderWrapper>
   );
 }
+
+const FunctionLine = styled.section`
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+`;
 
 const StyledFuncIconItem = styled(FuncIconItem)<{ theme: Theme }>(
   ({ theme }) => css`

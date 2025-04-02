@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import _ from "lodash";
 import React, { useRef } from "react";
 import styled from "@emotion/styled";

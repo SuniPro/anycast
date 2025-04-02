@@ -1,14 +1,13 @@
-/** @jsxImportSource @emotion/react */
 import { Dispatch, SetStateAction } from "react";
 import { SPORTS_TYPE, STREAMING_MENU_LIST } from "../../model/Streams";
 import { Navigation } from "../Navigation/Navigation";
 import styled from "@emotion/styled";
 import { css, Theme, useTheme } from "@emotion/react";
 import { useWindowContext } from "../../Context/WindowContext";
-import { defaultTheme, OPACITY_35 } from "../../styles/theme";
+import { defaultTheme } from "../../styles/theme";
 import { useProportionHook } from "../../hooks/useWindowHooks";
 import { SCREEN_CONTAINER_PADDING } from "./ScreenArea";
-import { ASPECT_RATIO } from "../layouts/Layouts";
+import { ASPECT_RATIO, HorizontalDivider } from "../layouts/Layouts";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -75,28 +74,15 @@ export function RecommendArea(props: ActiveMenuStateType) {
 
   return (
     <RecommendLine width={width} height={height} theme={theme}>
-      <div
-        css={css`
-          height: 48px;
-          flex-shrink: 0;
-        `}
-      >
-        <Navigation
-          css={css`
-            height: 43px;
-            padding: 0;
-
-            nav {
-              padding: 0;
-            }
-          `}
+      <NavigationLine>
+        <StyledNavigation
           menuList={STREAMING_MENU_LIST}
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
           navigationItemWidth={navigationItemWidth.size}
           navigationContainerWidth={navigationContainer.size}
         />
-      </div>
+      </NavigationLine>
 
       <RecommendContentsContainer theme={theme}>
         {leagueListByType ? (
@@ -149,16 +135,19 @@ export function RecommendArea(props: ActiveMenuStateType) {
           )
         ) : null}
       </RecommendContentsContainer>
-      <div
-        css={css`
-          border-bottom: 1px solid ${theme.mode.textSecondary + OPACITY_35};
-          margin-top: 13px;
-          width: 100%;
-        `}
-      />
+      <HorizontalDivider theme={theme} />
     </RecommendLine>
   );
 }
+
+const StyledNavigation = styled(Navigation)`
+  height: 43px;
+  padding: 0;
+
+  nav {
+    padding: 0;
+  }
+`;
 
 const ContentsTitle = styled.h4<{ theme: Theme }>(
   ({ theme }) => css`
@@ -240,6 +229,11 @@ const RecommendContentsContainer = styled.div<{ theme: Theme }>(
     ${theme.flexLayout.column}
   `,
 );
+
+const NavigationLine = styled.section`
+  height: 48px;
+  flex-shrink: 0;
+`;
 
 const RecommendLine = styled.section<{
   width: number;

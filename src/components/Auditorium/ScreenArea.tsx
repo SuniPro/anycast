@@ -16,6 +16,7 @@ import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { LikeButton } from "../comunity/rank/LikeButton";
 import { useCursor } from "../../Context/CursorContext";
 import { OPACITY_35 } from "../../styles/theme";
+import { useDarkMode } from "usehooks-ts";
 
 const SECTION_GAP = 20;
 export const SCREEN_CONTAINER_PADDING = 30;
@@ -176,6 +177,7 @@ export function ScreenInfo(props: {
   dateSize?: number;
   infoFontSize?: number;
 }) {
+  const { isDarkMode } = useDarkMode();
   const { leagueInfo, dateSize } = props;
   const { windowWidth } = useWindowContext();
   const theme = useTheme();
@@ -213,6 +215,7 @@ export function ScreenInfo(props: {
               }}
               profileSize={profileSize}
               theme={theme}
+              isDarkMode={isDarkMode}
             />
           </div>
           <DescriptionBox>
@@ -302,10 +305,14 @@ const InfoLine = styled.section`
   flex-wrap: nowrap;
 `;
 
-const Profile = styled(StyledImage)<{ theme: Theme; profileSize: number }>(
-  ({ theme, profileSize }) => css`
+const Profile = styled(StyledImage)<{
+  theme: Theme;
+  profileSize: number;
+  isDarkMode: boolean;
+}>(
+  ({ theme, profileSize, isDarkMode }) => css`
     background-size: ${profileSize}px;
-    background-color: ${theme.mode.textPrimary};
+    background-color: ${isDarkMode ? theme.colors.white : null};
     border-radius: ${theme.borderRadius.roundedBox};
   `,
 );

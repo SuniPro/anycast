@@ -146,6 +146,7 @@ const Container = styled.div<{
     padding: 0 ${CONTAINER_PADDING}px;
     align-items: center;
     justify-content: ${justifyContent};
+    box-sizing: border-box;
 
     color: ${theme.mode.textPrimary};
 

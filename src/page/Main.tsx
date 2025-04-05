@@ -41,7 +41,7 @@ export function Main() {
       isAllType
         ? getAllLeagueIsLive()
         : getSportsStreamsByType(activeMenu as SPORTS_TYPE, 0, 20),
-    refetchInterval: 20000,
+    refetchInterval: 100000,
     enabled: !!activeMenu, // 또는 필요 조건
   });
 

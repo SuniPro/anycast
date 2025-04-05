@@ -26,6 +26,7 @@ import { getAllLeague } from "../../api/streaming";
 import { HorizontalDivider } from "../layouts/Layouts";
 import { useCursor } from "../../Context/CursorContext";
 import { SportsLeagueType } from "../../model/Streams";
+import { EmptyPage } from "../styled/Empty/Empty";
 
 export function Header(props: {
   darkState: {
@@ -127,11 +128,7 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
   const { windowWidth } = useWindowContext();
   const { size } = useProportionHook(windowWidth, 700, theme.windowSize.tablet);
 
-  const sortedLeagueList = leagueList?.sort((a, b) => {
-    const aDate = new Date(a.leagueDate).getTime();
-    const bDate = new Date(b.leagueDate).getTime();
-    return bDate - aDate;
-  });
+  if (!leagueList) return;
 
   return (
     <Modal
@@ -142,12 +139,24 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
     >
       <>
         <ModalContainer width={size} theme={theme}>
-          {sortedLeagueList?.map((leagueInfo) => (
+          {leagueList.length === 0 ? (
+            <EmptyPage />
+          ) : (
             <>
-              <ScreenInfo leagueInfo={leagueInfo} dateSize={14} />
-              <HorizontalDivider theme={theme} />
+              {leagueList
+                .sort((a, b) => {
+                  const aDate = new Date(a.leagueDate).getTime();
+                  const bDate = new Date(b.leagueDate).getTime();
+                  return bDate - aDate;
+                })
+                .map((leagueInfo) => (
+                  <>
+                    <ScreenInfo leagueInfo={leagueInfo} dateSize={14} />
+                    <HorizontalDivider theme={theme} />
+                  </>
+                ))}
             </>
-          ))}
+          )}
         </ModalContainer>
       </>
     </Modal>

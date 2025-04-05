@@ -15,7 +15,7 @@ jobs:
 
       - name: Set up .env file
         run: |
-          cat <<EOF > ./.env
+          cat <<EOF > ./.env.production
           ${{ secrets.ENV }}
           EOF
 

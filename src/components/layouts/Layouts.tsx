@@ -371,6 +371,14 @@ export const HorizontalDivider = styled.div<{ theme: Theme }>(
   `,
 );
 
+export function Footer() {
+  return <FooterContainer />;
+}
+
+const FooterContainer = styled.footer`
+  height: 40px;
+`;
+
 export function GlobalStyled() {
   const theme = useTheme();
   return (

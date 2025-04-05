@@ -12,7 +12,7 @@ import { CursorProvider } from "./Context/CursorContext";
 import { useDarkMode } from "usehooks-ts";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, defaultTheme } from "./styles/theme";
-import { GlobalStyled } from "./components/layouts/Layouts";
+import { Footer, GlobalStyled } from "./components/layouts/Layouts";
 import { useEffect, useState } from "react";
 
 const QUERY_CLIENT = new QueryClient();
@@ -42,7 +42,7 @@ function App() {
             </BrowserRouter>
             <Toaster />
             <GlobalStyled />
-            <footer style={{ height: "40px" }}></footer>
+            <Footer />
           </SearchContextProvider>
         </WindowContextProvider>
       </QueryClientProvider>

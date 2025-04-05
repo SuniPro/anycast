@@ -41,8 +41,9 @@ jobs:
             docker stop anycast-client || true
             docker rm anycast-client || true
             docker run -d \
-              -p 80:80 \
-              -p 443:443 \
-              --restart unless-stopped \
-              --name anycast-client \
-              perasperaadastra250225/anycast-client:1.0.0
+            -p 80:80 \
+            -p 443:443 \
+            -v /etc/ssl/anycast:/etc/ssl/anycast:ro \
+            --restart unless-stopped \
+            --name anycast-client \
+            perasperaadastra250225/anycast-client:1.0.0

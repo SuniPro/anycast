@@ -26,7 +26,6 @@ import {
 } from "../layouts/Layouts";
 import { FuncItem } from "../styled/Button/Button";
 import { LeftArrowIcon, RightArrowIcon } from "../styled/icons";
-import { HlsPlayer } from "../Video/HlsPlayer";
 import { useItemResizing } from "../../hooks/useLayouts";
 import { css, Theme, useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +34,8 @@ import { EmptyPage } from "../styled/Empty/Empty";
 import Tooltip from "@mui/material/Tooltip";
 import { useSearchContext } from "../../Context/SearchContext";
 import { useCursor } from "../../Context/CursorContext";
+import { ThumbnailViewer } from "../Video/ThumbnailViewer";
+import { HlsPlayer } from "../Video/HlsPlayer";
 
 const MOVE_FACTOR = 2;
 const ITEM_GAP = 12;
@@ -229,14 +230,26 @@ function ContentsArea(props: {
                 isMain={activeScroll}
                 theme={theme}
               >
-                <HlsPlayer
-                  controls={true}
-                  hlsPath={league.streamUrl}
-                  hlsPathSub={league.streamUrlSub}
-                  width={itemWidth + (isMobile ? ITEM_GAP : 0)}
-                  height={itemHeight + (isMobile ? ITEM_GAP : 0)}
-                  muted={true}
-                />
+                {league.sportsTypeSub === "BJLOL" ? (
+                  <HlsPlayer
+                    hlsPath={league.streamUrl}
+                    hlsPathSub={league.streamUrl}
+                    width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+                    height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+                    muted={true}
+                    controls={false}
+                  />
+                ) : (
+                  <ThumbnailViewer
+                    hlsPath={league.streamUrl}
+                    width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+                    height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+                    muted={true}
+                    // hlsPathSub={league.streamUrl}
+                    // muted={true}
+                    // controls={false}
+                  />
+                )}
               </StyledItem>
               <DescriptionLine
                 onMouseEnter={() => setIsPointer(true)}
@@ -285,6 +298,7 @@ function ContentsArea(props: {
     </VisualItemContainer>
   );
 }
+
 const VisualItemContainer = styled(ItemContainer)<{ isView: boolean }>(
   ({ isView }) => css`
     visibility: ${isView ? "visible" : "hidden"};

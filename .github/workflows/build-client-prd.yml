@@ -40,4 +40,4 @@ jobs:
             docker pull perasperaadastra250225/anycast-client:1.0.0
             docker stop anycast-client || true
             docker rm anycast-client || true
-            docker run -d -p 5010:5010 --restart unless-stopped --name anycast-client perasperaadastra250225/anycast-client:1.0.0
+            docker run -d -p 80:80 --restart unless-stopped --name anycast-client perasperaadastra250225/anycast-client:1.0.0

@@ -13,11 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up .env file
-        run: |
-          cat <<EOF > ./.env.production
-          ${{ secrets.ENV }}
-          EOF
+      - name: Set up .env.production
+        run: echo "${{ secrets.ENV }}" > .env.production
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

@@ -414,7 +414,6 @@ export function GlobalStyled() {
           min-height: 100vh;
           color: ${theme.mode.textPrimary};
           background-color: ${theme.mode.bodyBackground};
-          cursor: none;
         }
 
         button {

@@ -68,67 +68,6 @@ export function HlsPlayer(props: HlsPlayerType) {
 const StyledVideo = styled.video<{ theme: Theme }>(
   ({ theme }) => css`
     background-color: ${theme.colors.black};
-
-    cursor: none;
-
-    &::-webkit-media-controls-timeline {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-panel {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-play-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-volume-slider-container {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-volume-slider {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-mute-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-current-time-display {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-fullscreen-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-rewind-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-return-to-realtime-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-toggle-closed-captions-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-timeline-container {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-seek-back-button {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-time-remaining-display {
-      cursor: none;
-    }
-
-    &::-webkit-media-controls-panel {
-      cursor: none;
-    }
+    cursor: default;
   `,
 );

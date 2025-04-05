@@ -203,7 +203,15 @@ html {
     }
 }
 
-body {
+div {
+    cursor : none;
+}
+
+section{
+    cursor : none;
+}
+
+article {
     cursor : none;
 }
 
@@ -215,8 +223,20 @@ input {
     cursor :none;
 }
 
+img {
+    cursor : none;
+}
+
 select {
     cursor :none;
+}
+
+video {
+    cursor : default;
+}
+
+footer {
+    cursor : none;
 }
 
 #root {

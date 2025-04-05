@@ -14,8 +14,8 @@ dist
 build
 
 # Env files
-.env.production
-.env.*
+!.env.production
+!.env.*
 
 # Test / mock / coverage
 coverage

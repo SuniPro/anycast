@@ -36,7 +36,7 @@ export async function getAllLeagueIsLive(
   page = 0,
 ): Promise<SportsLeagueType[]> {
   const response = await getFromStreamingServer(
-    `/league/read/live/all/${page}/${30}`,
+    `/league/read/live/all/${page}/${40}`,
   );
 
   return await response.data;

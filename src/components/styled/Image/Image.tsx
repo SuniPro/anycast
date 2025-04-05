@@ -1,14 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 
-export function GamingImageBox() {
-  return (
-    <div>
-      <img alt="test"></img>
-    </div>
-  );
-}
-
 export function StyledImage(props: {
   className?: string;
   imageUrl: string;

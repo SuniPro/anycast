@@ -1,0 +1,24 @@
+# OS & editor files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Node.js stuff
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build output
+dist
+build
+
+# Env files
+.env
+.env.*
+
+# Test / mock / coverage
+coverage
+__tests__
+*.test.js
+*.spec.js

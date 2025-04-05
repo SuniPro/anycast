@@ -35,6 +35,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useSearchContext } from "../../Context/SearchContext";
 import { useCursor } from "../../Context/CursorContext";
 import { ThumbnailViewer } from "../Video/ThumbnailViewer";
+import { HlsPlayer } from "../Video/HlsPlayer";
 
 const MOVE_FACTOR = 2;
 const ITEM_GAP = 12;
@@ -229,12 +230,26 @@ function ContentsArea(props: {
                 isMain={activeScroll}
                 theme={theme}
               >
-                <ThumbnailViewer
-                  hlsPath={league.streamUrl}
-                  width={itemWidth + (isMobile ? ITEM_GAP : 0)}
-                  height={itemHeight + (isMobile ? ITEM_GAP : 0)}
-                  muted={true}
-                />
+                {league.sportsTypeSub === "BJLOL" ? (
+                  <HlsPlayer
+                    hlsPath={league.streamUrl}
+                    hlsPathSub={league.streamUrl}
+                    width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+                    height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+                    muted={true}
+                    controls={false}
+                  />
+                ) : (
+                  <ThumbnailViewer
+                    hlsPath={league.streamUrl}
+                    width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+                    height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+                    muted={true}
+                    // hlsPathSub={league.streamUrl}
+                    // muted={true}
+                    // controls={false}
+                  />
+                )}
               </StyledItem>
               <DescriptionLine
                 onMouseEnter={() => setIsPointer(true)}

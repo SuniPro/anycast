@@ -44,16 +44,14 @@ export function HlsPlayer(props: HlsPlayerType) {
     if (Hls.isSupported()) {
       /**
        * 최대 지연시간은 14초, 그리고 TS 조각의 평균 크기는 8초,
-       * 따라서 8초를 재생하고 있는 동안 20초를 넘어버리면
-       * 가장 최근 TS로 점프해버리는 문제 발생 따라서 지연시간은
-       * 8 + 14로 최대 24초까지 지연될 가능성을 감안해야함
-       * 고로, liveMaxLatencyDurationCount는 넉넉하게 30초로 설정하였음
+       * 가장 최근 TS로 점프해버리는 문제 발생을 저지하기 위해
+       * liveMaxLatencyDurationCount는 20초로 설정하였음
        * */
       const hls = new Hls({
         maxBufferLength: 10,
         maxMaxBufferLength: 30,
         liveSyncDurationCount: 8,
-        liveMaxLatencyDurationCount: 30,
+        liveMaxLatencyDurationCount: 20,
         autoStartLoad: true,
         lowLatencyMode: true,
       });

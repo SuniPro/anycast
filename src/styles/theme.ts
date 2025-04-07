@@ -17,13 +17,6 @@ export const windowSize = {
   FHD: 1920,
 };
 
-const flexLayout = {
-  column: "display: flex;  flex-direction: column;",
-  row: "display: flex; flex-direction: row;",
-  center:
-    "align-items: center; justify-content: center; align-content: center;",
-};
-
 const fontSize = {
   xs: "0.5rem",
   sm: "0.75rem",
@@ -309,7 +302,6 @@ export type defaultModeTypes = typeof defaultMode;
 export type darkModeTypes = typeof darkMode;
 export type DeviceSizeTypes = typeof deviceSize;
 export type WindowSizeTypes = typeof windowSize;
-export type FlexLayoutTypes = typeof flexLayout;
 export type FontSizeTypes = typeof fontSize;
 export type ColorTypes = typeof colors;
 export type BorderRadiusTypes = typeof borderRadius;
@@ -317,7 +309,6 @@ export type BorderRadiusTypes = typeof borderRadius;
 const muiBase = createTheme();
 const baseTheme = {
   colors,
-  flexLayout,
   deviceSize,
   windowSize,
   fontSize,

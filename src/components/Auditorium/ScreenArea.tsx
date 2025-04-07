@@ -87,8 +87,10 @@ const ScreenBox = styled.div<{ theme: Theme }>(
     }
     gap: 6px;
     box-sizing: border-box;
-    ${theme.flexLayout.center}
-    ${theme.flexLayout.column}
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   `,
 );
 

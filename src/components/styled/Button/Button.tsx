@@ -30,19 +30,12 @@ export function FuncIconItem(props: FuncIconItemProps) {
       onClick={func}
       {...other}
     >
-      <IconCase theme={theme}>{icon}</IconCase>
+      <IconCase>{icon}</IconCase>
       {label}
     </StyledFuncButton>
   );
 }
 
-// export const ButtonWrapper = styled.div`
-//   width: 100%;
-//   height: 100%;
-//
-//   ${theme.flexLayout.row}
-//   ${theme.flexLayout.center}
-// `;
 export const StyledFuncButton = styled.button<{
   isActive?: boolean;
   inActiveBackgroundColor?: string;
@@ -74,11 +67,13 @@ export const StyledFuncButton = styled.button<{
         ? activeBackgroundColor
         : theme.mode.buttonHoverBackground};
     }
+
     &:active {
       background-color: ${theme.mode.menuActive};
       background-size: 100%;
       transition: background 0s;
     }
+
     transition: background 0.8s;
 
     &:focus {
@@ -87,10 +82,10 @@ export const StyledFuncButton = styled.button<{
   `,
 );
 
-const IconCase = styled.i<{ theme: Theme }>(
-  ({ theme }) => css`
-    ${theme.flexLayout.column}
-    ${theme.flexLayout.center}
+const IconCase = styled.i`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: auto;
-  `,
-);
+`;

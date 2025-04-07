@@ -52,7 +52,7 @@ export function HlsPlayer(props: HlsPlayerType) {
       const hls = new Hls({
         maxBufferLength: 10,
         maxMaxBufferLength: 30,
-        liveSyncDurationCount: 5,
+        liveSyncDurationCount: 8,
         liveMaxLatencyDurationCount: 30,
         autoStartLoad: true,
         lowLatencyMode: true,

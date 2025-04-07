@@ -2,8 +2,9 @@ import Hls from "hls.js";
 import { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { css, Theme, useTheme } from "@emotion/react";
+import { useCursor } from "../../Context/CursorContext";
 
-interface HlsPlayerType {
+export interface HlsPlayerType {
   className?: string;
   hlsPath: string;
   hlsPathSub: string;
@@ -25,34 +26,38 @@ export function HlsPlayer(props: HlsPlayerType) {
     autoPlay = true,
   } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { setIsVideo } = useCursor();
   const theme = useTheme();
 
   const streamingPath = import.meta.env.VITE_STREAMING_SERVER_PREFIX;
 
   useEffect(() => {
-    const isExternal = hlsPath.includes("soop"); // ✅ 외부 URL인지 확인
+    if (!videoRef.current || !autoPlay) return;
+
+    const isExternal = hlsPath.includes("soop");
     const encodedUrl = encodeURIComponent(hlsPath);
     const sourceUrl = isExternal
       ? `${streamingPath}/broadcast/soop?url=${encodedUrl}`
       : hlsPath;
 
-    if (videoRef.current) {
-      if (!autoPlay) return;
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(sourceUrl);
-        hls.attachMedia(videoRef.current);
-      } else if (
-        videoRef.current.canPlayType("application/vnd.apple.mpegurl")
-      ) {
-        videoRef.current.src = sourceUrl;
-      }
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(sourceUrl);
+      hls.attachMedia(videoRef.current);
+
+      return () => {
+        hls.destroy();
+      };
+    } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
+      videoRef.current.src = sourceUrl;
     }
   }, [autoPlay, hlsPath, streamingPath]);
 
   return (
     <StyledVideo
       className={className}
+      onMouseEnter={() => setIsVideo(true)}
+      onMouseLeave={() => setIsVideo(false)}
       ref={videoRef}
       controls={controls}
       autoPlay={autoPlay}
@@ -64,7 +69,6 @@ export function HlsPlayer(props: HlsPlayerType) {
   );
 }
 
-// noinspection CssInvalidPseudoSelector
 const StyledVideo = styled.video<{ theme: Theme }>(
   ({ theme }) => css`
     background-color: ${theme.colors.black};

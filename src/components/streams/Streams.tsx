@@ -241,13 +241,12 @@ function ContentsArea(props: {
                   />
                 ) : (
                   <ThumbnailViewer
-                    hlsPath={league.streamUrl}
                     width={itemWidth + (isMobile ? ITEM_GAP : 0)}
                     height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+                    hlsPath={league.streamUrl}
+                    hlsPathSub={league.streamUrlSub}
                     muted={true}
-                    // hlsPathSub={league.streamUrl}
-                    // muted={true}
-                    // controls={false}
+                    controls={false}
                   />
                 )}
               </StyledItem>

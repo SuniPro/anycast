@@ -6,7 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import styled from "@emotion/styled";
 
 export function Cursor() {
-  const { isPointer, isLike } = useCursor();
+  const { isPointer, isLike, isVideo } = useCursor();
   const cursorRef = useRef<HTMLDivElement>(null);
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -25,7 +25,9 @@ export function Cursor() {
   }, []);
 
   const CursorSelector = () => {
-    if (isPointer && !isMobile) {
+    if (isVideo) {
+      return <></>;
+    } else if (isPointer && !isMobile) {
       return <PointerCursor />;
     } else if (isLike) {
       return <FavoriteCursor />;

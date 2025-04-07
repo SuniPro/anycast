@@ -45,8 +45,10 @@ export function useHlsPlayer(
         };
 
         hls.on(Hls.Events.FRAG_LOADED, handleFragLoaded);
-        hls.loadSource(hlsPath);
-        hls.attachMedia(videoEl);
+        setTimeout(() => {
+          hls.loadSource(sourceUrl);
+          hls.attachMedia(videoEl);
+        }, 0);
 
         return () => {
           hls.off(Hls.Events.FRAG_LOADED, handleFragLoaded);
@@ -78,8 +80,10 @@ export function useHlsPlayer(
         });
       }
 
-      hls.loadSource(sourceUrl);
-      hls.attachMedia(videoEl);
+      setTimeout(() => {
+        hls.loadSource(sourceUrl);
+        hls.attachMedia(videoEl);
+      }, 0);
 
       return () => {
         hls.destroy();

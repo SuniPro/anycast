@@ -89,11 +89,11 @@ export function RecommendArea(props: ActiveMenuStateType) {
       <RecommendContentsContainer theme={theme}>
         {leagueListByType ? (
           leagueListByType.length > 0 ? (
-            leagueListByType.map((league, index) => (
+            leagueListByType.map((league) => (
               <ContentsLine
+                key={league.id}
                 onMouseEnter={() => setIsPointer(true)}
                 onMouseLeave={() => setIsPointer(false)}
-                key={index}
                 onClick={() => navigate(`/auditorium/${league.id}`)}
                 theme={theme}
               >

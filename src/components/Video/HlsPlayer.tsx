@@ -42,7 +42,15 @@ export function HlsPlayer(props: HlsPlayerType) {
       : hlsPath;
 
     if (Hls.isSupported()) {
-      const hls = new Hls();
+      const hls = new Hls({
+        maxBufferLength: 10,
+        maxMaxBufferLength: 30,
+        liveSyncDurationCount: 8, // TS 조각의 평균 크기인 8초
+        liveMaxLatencyDurationCount: 20, // 지연도 20초 까지 허용해서 넉넉히 TS 세그먼트 두개 분량을 계산합니다.
+        autoStartLoad: true,
+        lowLatencyMode: true,
+      });
+
       hls.loadSource(sourceUrl);
       hls.attachMedia(video);
 

@@ -113,6 +113,7 @@ export const STREAMING_MENU_LIST = [
   { menu: "UFC", label: "UFC" },
   { menu: "TENNIS", label: "테니스" },
   { menu: "PINGPONG", label: "탁구" },
+  { menu: "ETC", label: "ETC" },
 ];
 
 export const SPORTS_TYPE_LIST = [

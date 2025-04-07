@@ -8,7 +8,12 @@ import { useWindowContext } from "../../Context/WindowContext";
 import { defaultTheme } from "../../styles/theme";
 import { useProportionHook } from "../../hooks/useWindowHooks";
 import { SCREEN_CONTAINER_PADDING } from "./ScreenArea";
-import { ASPECT_RATIO, HorizontalDivider } from "../layouts/Layouts";
+import {
+  ASPECT_RATIO,
+  HorizontalDivider,
+  ItemDescription,
+  ItemTitle,
+} from "../layouts/Layouts";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -89,11 +94,11 @@ export function RecommendArea(props: ActiveMenuStateType) {
       <RecommendContentsContainer theme={theme}>
         {leagueListByType ? (
           leagueListByType.length > 0 ? (
-            leagueListByType.map((league, index) => (
+            leagueListByType.map((league) => (
               <ContentsLine
+                key={league.id}
                 onMouseEnter={() => setIsPointer(true)}
                 onMouseLeave={() => setIsPointer(false)}
-                key={index}
                 onClick={() => navigate(`/auditorium/${league.id}`)}
                 theme={theme}
               >
@@ -123,13 +128,15 @@ export function RecommendArea(props: ActiveMenuStateType) {
                   )}
                 </Contents>
                 <ContentsDescriptionLine theme={theme}>
-                  <ContentsTitle theme={theme}>
+                  <ItemTitle theme={theme} fontSize={16} paddingBottom={0}>
                     {league.liveTitle}
-                  </ContentsTitle>
-                  <ChannelName theme={theme}>{league.channelName}</ChannelName>
-                  <ContentsDate theme={theme}>
+                  </ItemTitle>
+                  <StyledItemDescription theme={theme}>
+                    {league.channelName}
+                  </StyledItemDescription>
+                  <StyledItemDescription theme={theme}>
                     {iso8601ToYYMMDDHHMM(league.leagueDate)}
-                  </ContentsDate>
+                  </StyledItemDescription>
                 </ContentsDescriptionLine>
               </ContentsLine>
             ))
@@ -152,53 +159,30 @@ const StyledNavigation = styled(Navigation)`
   }
 `;
 
-const ContentsTitle = styled.h4<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-size: 15px;
-    font-family: ${theme.mode.font.component.itemTitle};
-    text-align: left;
-    margin: 0;
-    padding: 0 0 2px 0;
-  `,
-);
+const ContentsDescriptionLine = styled.div`
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+`;
 
-const ChannelName = styled.span<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-family: ${theme.fontStyle.appleNeoBold};
-    font-size: 14px;
-  `,
-);
+const StyledItemDescription = styled(ItemDescription)`
+  font-size: 13px;
+`;
 
-const ContentsDate = styled.span<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-family: ${theme.fontStyle.koPubDotumBold};
-    font-weight: 500;
-    font-size: 12px;
-  `,
-);
+const ContentsLine = styled.div`
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: flex-start;
 
-const ContentsDescriptionLine = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    box-sizing: border-box;
-    ${theme.flexLayout.column}
-  `,
-);
-
-const ContentsLine = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    width: 100%;
-    padding: 4px;
-    box-sizing: border-box;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    gap: 8px;
-    ${theme.flexLayout.row}
-  `,
-);
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+`;
 
 const Contents = styled.div<{ theme: Theme; width: number; height: number }>(
   ({ theme, width, height }) => css`
@@ -215,19 +199,18 @@ const Contents = styled.div<{ theme: Theme; width: number; height: number }>(
   `,
 );
 
-const RecommendContentsContainer = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    flex-grow: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
+const RecommendContentsContainer = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    padding-top: 20px;
-    justify-content: flex-start;
-    ${theme.flexLayout.column}
-  `,
-);
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  padding-top: 20px;
+  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+`;
 
 const NavigationLine = styled.section`
   height: 48px;

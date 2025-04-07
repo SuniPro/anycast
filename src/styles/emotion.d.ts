@@ -5,9 +5,7 @@ import {
   BorderRadiusTypes,
   ColorTypes,
   DeviceSizeTypes,
-  FlexLayoutTypes,
   FontSizeTypes,
-  FontTypes,
   WindowSizeTypes,
 } from "./theme";
 
@@ -17,9 +15,7 @@ declare module "@emotion/react" {
     deviceSize: DeviceSizeTypes;
     windowSize: WindowSizeTypes;
     colors: ColorTypes;
-    fontStyle: FontTypes;
     fontSize: FontSizeTypes;
     borderRadius: BorderRadiusTypes;
-    flexLayout: FlexLayoutTypes;
   }
 }

@@ -227,7 +227,7 @@ function ContentsArea(props: {
           >
             <ItemCase theme={theme}>
               <StyledItem
-                key={index}
+                key={league.id}
                 width={itemWidth}
                 isMain={activeScroll}
                 onMouseEnter={() => setSelectedItem(index)}

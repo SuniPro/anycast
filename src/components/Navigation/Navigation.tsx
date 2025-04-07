@@ -191,7 +191,7 @@ const NavigationFuncItem = styled(FuncItem)<{
     align-items: center;
     white-space: nowrap;
     justify-content: ${justifyContent};
-    font-family: ${theme.fontStyle.koPubDotumBold};
+    font-family: ${theme.mode.font.navigation.item};
     display: flex;
     flex-direction: row;
 

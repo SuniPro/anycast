@@ -51,7 +51,6 @@ export function Header(props: {
         width={40 * 1.3}
         height={40}
         onClick={() => navigate("/")}
-        theme={theme}
         onMouseEnter={() => setIsPointer(true)}
         onMouseLeave={() => setIsPointer(false)}
       >
@@ -164,16 +163,16 @@ export function ScheduleListModal(props: { open: boolean; close: () => void }) {
 }
 
 export const LogoContainer = styled.div<{
-  theme: Theme;
   width: number;
   height: number;
 }>(
-  ({ theme, width, height }) => css`
+  ({ width, height }) => css`
     width: ${width}px;
     height: ${height}px;
     gap: 4px;
     align-items: center;
-    ${theme.flexLayout.row}
+    display: flex;
+    flex-direction: row;
   `,
 );
 
@@ -190,7 +189,8 @@ export const HeaderWrapper = styled.header<{ theme: Theme }>(
     background-color: ${theme.mode.bodyBackground};
     padding: 10px 2rem;
 
-    ${theme.flexLayout.row}
+    display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;

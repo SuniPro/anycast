@@ -70,7 +70,9 @@ const Word = styled.span<{
       color: ${activeColor};
     }
 
-    ${theme.flexLayout}
-    ${theme.flexLayout.center}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   `,
 );

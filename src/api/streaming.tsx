@@ -26,7 +26,7 @@ export async function getESportsStreams(
 
 export async function getAllLeague(page = 0): Promise<SportsLeagueType[]> {
   const response = await getFromStreamingServer(
-    `/league/read/all/${page}/${30}`,
+    `/league/read/all/${page}/${100}`,
   );
 
   return await response.data;
@@ -36,18 +36,7 @@ export async function getAllLeagueIsLive(
   page = 0,
 ): Promise<SportsLeagueType[]> {
   const response = await getFromStreamingServer(
-    `/league/read/live/all/${page}/${40}`,
-  );
-
-  return await response.data;
-}
-
-export async function getAllLeagueBySportsTypeInfinite(
-  type: SPORTS_TYPE,
-  page: number,
-): Promise<SportsLeagueType[]> {
-  const response = await getFromStreamingServer(
-    `/league/read/${type}?page=${page}&size=20`,
+    `/league/read/live/all/${page}/${100}`,
   );
 
   return await response.data;

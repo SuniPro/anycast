@@ -15,6 +15,8 @@ interface CursorContextType {
   setIsGrab: React.Dispatch<React.SetStateAction<boolean>>;
   isLike: boolean;
   setIsLike: React.Dispatch<React.SetStateAction<boolean>>;
+  isVideo: boolean;
+  setIsVideo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // 초기 값 설정
@@ -25,16 +27,27 @@ export const CursorProvider = ({ children }: { children: ReactNode }) => {
   const [isPointer, setIsPointer] = useState(false);
   const [isGrab, setIsGrab] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [isVideo, setIsVideo] = useState(false);
 
   useEffect(() => {
     setIsPointer(false);
     setIsPointer(false);
     setIsGrab(false);
+    setIsVideo(false);
   }, [location]);
 
   return (
     <CursorContext.Provider
-      value={{ isPointer, setIsPointer, isGrab, setIsGrab, isLike, setIsLike }}
+      value={{
+        isPointer,
+        setIsPointer,
+        isGrab,
+        setIsGrab,
+        isLike,
+        setIsLike,
+        isVideo,
+        setIsVideo,
+      }}
     >
       {children}
     </CursorContext.Provider>

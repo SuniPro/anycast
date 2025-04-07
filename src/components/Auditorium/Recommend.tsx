@@ -117,9 +117,8 @@ export function RecommendArea(props: ActiveMenuStateType) {
                       width={contentsWidth}
                       height={contentsHeight}
                       muted={true}
-                      // hlsPathSub={league.streamUrl}
-                      // muted={true}
-                      // controls={false}
+                      controls={false}
+                      hlsPathSub={league.streamUrl}
                     />
                   )}
                 </Contents>

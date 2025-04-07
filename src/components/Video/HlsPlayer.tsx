@@ -28,28 +28,42 @@ export function HlsPlayer(props: HlsPlayerType) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { setIsVideo } = useCursor();
   const theme = useTheme();
-
   const streamingPath = import.meta.env.VITE_STREAMING_SERVER_PREFIX;
 
   useEffect(() => {
-    const isExternal = hlsPath.includes("soop"); // ✅ 외부 URL인지 확인
+    if (!videoRef.current || !autoPlay) return;
+
+    const video = videoRef.current;
+
+    const isExternal = hlsPath.includes("soop");
     const encodedUrl = encodeURIComponent(hlsPath);
     const sourceUrl = isExternal
       ? `${streamingPath}/broadcast/soop?url=${encodedUrl}`
       : hlsPath;
 
-    if (videoRef.current) {
-      if (!autoPlay) return;
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(sourceUrl);
-        hls.attachMedia(videoRef.current);
-      } else if (
-        videoRef.current.canPlayType("application/vnd.apple.mpegurl")
-      ) {
-        videoRef.current.src = sourceUrl;
-      }
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(sourceUrl);
+      hls.attachMedia(video);
+
+      return () => {
+        hls.destroy();
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+      };
     }
+
+    // HLS.js 지원 안될 때만 native HLS 사용 (예: Safari)
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = sourceUrl;
+    }
+
+    return () => {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    };
   }, [autoPlay, hlsPath, streamingPath]);
 
   return (
@@ -68,7 +82,6 @@ export function HlsPlayer(props: HlsPlayerType) {
   );
 }
 
-// noinspection CssInvalidPseudoSelector
 const StyledVideo = styled.video<{ theme: Theme }>(
   ({ theme }) => css`
     background-color: ${theme.colors.black};

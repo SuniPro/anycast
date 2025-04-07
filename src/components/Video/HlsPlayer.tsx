@@ -42,12 +42,11 @@ export function HlsPlayer(props: HlsPlayerType) {
 
     if (Hls.isSupported()) {
       const hls = new Hls({
-        maxBufferLength: 10, // 세그먼트 개수
-        liveSyncDurationCount: 3,
-        liveMaxLatencyDurationCount: 7,
-        maxMaxBufferLength: 30,
-        liveDurationInfinity: false,
-        lowLatencyMode: true,
+        maxBufferLength: 30, // 너무 작으면 버퍼링, 너무 크면 느려질 수 있음
+        liveSyncDurationCount: 5, // 10초 지연
+        liveMaxLatencyDurationCount: 15, // 최대 30초까지 허용
+        autoStartLoad: true,
+        lowLatencyMode: true, // 라이브 스트리밍에는 보통 이걸 켜요
       });
 
       hls.loadSource(sourceUrl);

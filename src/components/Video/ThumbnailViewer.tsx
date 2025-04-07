@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import Hls from "hls.js";
+import { useRef } from "react";
 import { useCursor } from "../../Context/CursorContext";
 import { HlsPlayerType } from "./HlsPlayer";
+import { useHlsPlayer } from "../../hooks/useHlsPlayer";
 
 /**
  * hls Player에 세그먼트를 직접 관리하여, thumbnail을 생성해주는 컴포넌트입니다.
@@ -11,43 +11,8 @@ import { HlsPlayerType } from "./HlsPlayer";
 export function ThumbnailViewer(props: HlsPlayerType) {
   const { className, hlsPath, muted, width, height } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
-  const firstSegmentLoadedRef = useRef<boolean>(false);
   const { setIsVideo } = useCursor();
-
-  useEffect(() => {
-    if (!videoRef.current) return;
-    firstSegmentLoadedRef.current = false;
-    const video = videoRef.current;
-
-    if (Hls.isSupported()) {
-      const hls = new Hls({
-        autoStartLoad: true,
-        startLevel: -1,
-      });
-
-      const handleFragLoaded = () => {
-        if (!firstSegmentLoadedRef.current) {
-          firstSegmentLoadedRef.current = true;
-        } else {
-          hls.stopLoad(); // 더 확실히 끊어줌
-          hls.off(Hls.Events.FRAG_LOADED, handleFragLoaded); // 🧼 이벤트도 해제
-        }
-      };
-
-      hls.on(Hls.Events.FRAG_LOADED, handleFragLoaded);
-      hls.loadSource(hlsPath);
-      hls.attachMedia(video);
-
-      return () => {
-        hls.off(Hls.Events.FRAG_LOADED, handleFragLoaded);
-        hls.destroy();
-        video.pause();
-        video.src = "";
-      };
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = hlsPath;
-    }
-  }, [hlsPath]);
+  useHlsPlayer(videoRef, hlsPath, false, "thumbnail");
 
   return (
     <video

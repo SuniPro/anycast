@@ -32,24 +32,23 @@ export function HlsPlayer(props: HlsPlayerType) {
   const streamingPath = import.meta.env.VITE_STREAMING_SERVER_PREFIX;
 
   useEffect(() => {
-    if (!videoRef.current || !autoPlay) return;
-
-    const isExternal = hlsPath.includes("soop");
+    const isExternal = hlsPath.includes("soop"); // ✅ 외부 URL인지 확인
     const encodedUrl = encodeURIComponent(hlsPath);
     const sourceUrl = isExternal
       ? `${streamingPath}/broadcast/soop?url=${encodedUrl}`
       : hlsPath;
 
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(sourceUrl);
-      hls.attachMedia(videoRef.current);
-
-      return () => {
-        hls.destroy();
-      };
-    } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-      videoRef.current.src = sourceUrl;
+    if (videoRef.current) {
+      if (!autoPlay) return;
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(sourceUrl);
+        hls.attachMedia(videoRef.current);
+      } else if (
+        videoRef.current.canPlayType("application/vnd.apple.mpegurl")
+      ) {
+        videoRef.current.src = sourceUrl;
+      }
     }
   }, [autoPlay, hlsPath, streamingPath]);
 
@@ -69,6 +68,7 @@ export function HlsPlayer(props: HlsPlayerType) {
   );
 }
 
+// noinspection CssInvalidPseudoSelector
 const StyledVideo = styled.video<{ theme: Theme }>(
   ({ theme }) => css`
     background-color: ${theme.colors.black};

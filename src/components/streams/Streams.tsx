@@ -177,7 +177,6 @@ export function Streams(props: {
 const StyledItem = styled(Item)<{ isMain: boolean }>(
   ({}) => css`
     position: relative;
-
     overflow: hidden;
   `,
 );
@@ -203,7 +202,10 @@ function ContentsArea(props: {
 
   const { windowWidth } = useWindowContext();
 
+  const [selectedIndex, setSelectedItem] = useState<number | null>(null);
+
   const isMobile = windowWidth <= theme.windowSize.mobile;
+  const isPhone = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const { setIsPointer } = useCursor();
   const navigate = useNavigate();
@@ -228,16 +230,20 @@ function ContentsArea(props: {
                 key={index}
                 width={itemWidth}
                 isMain={activeScroll}
+                onMouseEnter={() => setSelectedItem(index)}
+                onMouseLeave={() => setSelectedItem(null)}
                 theme={theme}
               >
-                {league.sportsTypeSub === "BJLOL" ? (
+                {(!isPhone && selectedIndex === index) ||
+                league.streamUrlSub === "BJLOL" ? (
                   <HlsPlayer
                     hlsPath={league.streamUrl}
                     hlsPathSub={league.streamUrl}
                     width={itemWidth + (isMobile ? ITEM_GAP : 0)}
                     height={itemHeight + (isMobile ? ITEM_GAP : 0)}
                     muted={true}
-                    controls={false}
+                    autoPlay={selectedIndex === index}
+                    controls={true}
                   />
                 ) : (
                   <ThumbnailViewer

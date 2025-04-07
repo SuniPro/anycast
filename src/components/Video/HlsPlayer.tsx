@@ -35,6 +35,7 @@ export function HlsPlayer(props: HlsPlayerType) {
 
     const video = videoRef.current;
     const isExternal = hlsPath.includes("soop");
+    const lowLatencyMode = !isExternal;
     const encodedUrl = encodeURIComponent(hlsPath);
     const sourceUrl = isExternal
       ? `${streamingPath}/broadcast/soop?url=${encodedUrl}`
@@ -42,12 +43,25 @@ export function HlsPlayer(props: HlsPlayerType) {
 
     if (Hls.isSupported()) {
       const hls = new Hls({
+        lowLatencyMode,
+        backBufferLength: 60,
         maxBufferLength: 30, // 너무 작으면 버퍼링, 너무 크면 느려질 수 있음
         liveSyncDurationCount: 5, // 10초 지연
-        liveMaxLatencyDurationCount: 15, // 최대 30초까지 허용
+        liveMaxLatencyDurationCount: 10, // 최대 30초까지 허용
         autoStartLoad: true,
-        lowLatencyMode: true, // 라이브 스트리밍에는 보통 이걸 켜요
       });
+
+      if (isExternal) {
+        {
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            const latencyOffset = 12;
+            const liveEdge =
+              hls.liveSyncPosition || video.duration - video.currentTime || 0;
+            const targetStart = liveEdge - latencyOffset;
+            hls.startLoad(Math.max(0, targetStart)); // 음수 방지
+          });
+        }
+      }
 
       hls.loadSource(sourceUrl);
       hls.attachMedia(video);

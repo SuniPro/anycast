@@ -18,7 +18,7 @@ const LogoTextCase = styled.span<{ fontSize: number; theme: Theme }>(
   ({ theme, fontSize }) => css`
     white-space: nowrap;
     color: ${theme.colors.honeyHaze};
-    font-family: ${theme.fontStyle.poppins};
+    font-family: ${theme.mode.font.logo};
     font-weight: 700;
     font-size: ${fontSize}px;
     transform: translateY(0%);

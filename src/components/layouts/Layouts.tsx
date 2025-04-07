@@ -37,7 +37,7 @@ export const MainTitleLine = styled.div<{ theme: Theme }>(
     justify-content: space-between;
     align-items: center;
 
-    font-family: ${theme.fontStyle.montserrat};
+    font-family: ${theme.mode.font.component.mainTitle};
 
     // 모바일 환경에서 타이틀이 화면 끝에 붙는걸 방지합니다.
     @media ${theme.deviceSize.phone} {
@@ -188,7 +188,7 @@ export const ItemTitle = styled.h3<{
   ({ theme, fontSize, paddingBottom }) => css`
     font-size: ${fontSize}px;
     text-align: left;
-    font-family: ${theme.fontStyle.nanumGothic};
+    font-family: ${theme.mode.font.component.itemTitle};
     font-weight: 800;
     margin: 0;
     padding: 0 0 ${paddingBottom}px;

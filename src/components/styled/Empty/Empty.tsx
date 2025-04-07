@@ -19,7 +19,7 @@ export function EmptyPage(props: { title?: string; message?: string }) {
 const Container = styled.div<{ theme: Theme }>(
   ({ theme }) => css`
     width: 100%;
-    font-family: ${theme.fontStyle.koPubDotumBold};
+    font-family: ${theme.mode.font.empty.title}
     box-sizing: border-box;
     white-space: nowrap;
 

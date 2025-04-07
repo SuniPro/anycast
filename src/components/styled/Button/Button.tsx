@@ -1,63 +1,7 @@
 import styled from "@emotion/styled";
 import { ReactElement } from "react";
-import { AppProps, FuncIconItemProps, FuncItemProps } from "./ButtonPropsType";
-import { EllipsisCase } from "../../layouts/Layouts";
+import { FuncIconItemProps, FuncItemProps } from "./ButtonPropsType";
 import { css, Theme, useTheme } from "@emotion/react";
-
-export function AppItem(props: AppProps) {
-  const { className, icon, label, caseWidth, func, ...other } = props;
-  const theme = useTheme();
-
-  return (
-    <AppCase caseWidth={caseWidth} onClick={func} theme={theme}>
-      <IconBox theme={theme} className={className} {...other}>
-        {icon}
-      </IconBox>
-      <AppName text={label} testAlign="center" width={60} theme={theme} />
-    </AppCase>
-  );
-}
-
-const AppCase = styled.div<{ caseWidth?: string; theme: Theme }>(
-  ({ caseWidth = "100%", theme }) => css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: ${caseWidth};
-    height: 100%;
-
-    color: ${theme.mode.textPrimary};
-  `,
-);
-
-const IconBox = styled.div<{ width?: number; height?: number; theme: Theme }>(
-  ({ width = 50, height = 50, theme }) => css`
-    width: ${width}px;
-    height: ${height}px;
-    flex-shrink: 0;
-    margin-bottom: 10px;
-    border-radius: 14px;
-
-    svg {
-      width: ${width}px;
-      height: ${width}px;
-      fill: ${theme.mode.textPrimary};
-      transition: fill 0.2s;
-
-      &:hover {
-        fill: ${theme.mode.textAccent};
-      }
-    }
-  `,
-);
-
-const AppName = styled(EllipsisCase)<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-family: ${theme.fontStyle.yesGothicLight};
-    font-size: 15px;
-  `,
-);
 
 export function FuncItem(props: FuncItemProps): ReactElement {
   const { className, label, func, isActive, ...other } = props;

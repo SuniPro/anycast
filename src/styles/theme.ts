@@ -104,7 +104,7 @@ const colors = {
   platinum: "#e6e6e6",
   ashGray: "#D6D6D6",
   steelGray: "#A0A0A0",
-  gunmetalGray: "#5A5A5A",
+  graniteGray: "#606060",
   softWhiteGray: "#F2F2F2", // 기존 whiteGray
   brightGray: "#E6EEF3",
   lightGray: "#B0B0B0",
@@ -155,7 +155,7 @@ const defaultMode = {
 
   // 🔹 기본 텍스트 색상
   textPrimary: colors.black,
-  textSecondary: colors.steelGray,
+  textSecondary: colors.graniteGray,
   textAccent: colors.vividCerulean,
 
   // 🔹 버튼 색상
@@ -173,7 +173,7 @@ const defaultMode = {
   menuInactive: colors.lightGrayToneUp,
 
   // 🔹 테두리 & 구분선
-  borderColor: colors.gunmetalGray,
+  borderColor: colors.graniteGray,
   dividerColor: colors.steelGray,
 
   // 🔹 입력 필드
@@ -198,6 +198,7 @@ const defaultMode = {
   footerText: colors.lightGray,
 
   font: {
+    logo: fontStyle.poppins,
     header: {
       menuItem: fontStyle.yesGothicExtraBold,
     },
@@ -205,7 +206,10 @@ const defaultMode = {
       menuText: fontStyle.roboto,
     },
     navigation: {
-      item: fontStyle.appleNeoBold,
+      item: fontStyle.koPubDotumBold,
+    },
+    button: {
+      default: fontStyle.appleNeoBold,
     },
     search: fontStyle.yesGothicMedium,
     component: {
@@ -215,6 +219,9 @@ const defaultMode = {
     },
     dynamicIsland: {
       stateView: fontStyle.yesGothicExtraBold,
+    },
+    empty: {
+      title: fontStyle.koPubDotumBold,
     },
   },
 };
@@ -245,14 +252,14 @@ const darkMode = {
   menuInactive: colors.lightGrayToneUp,
 
   // 🔹 테두리 & 구분선
-  borderColor: colors.gunmetalGray,
+  borderColor: colors.graniteGray,
   dividerColor: colors.steelGray,
 
   // 🔹 입력 필드
   inputBackground: colors.darkCharcoal,
   inputText: colors.white,
   inputPlaceholder: colors.lightGray,
-  inputBorder: colors.gunmetalGray,
+  inputBorder: colors.graniteGray,
 
   // 🔹 상태 색상
   success: colors.successGreen,
@@ -270,6 +277,7 @@ const darkMode = {
   footerText: colors.lightGray,
 
   font: {
+    logo: fontStyle.poppins,
     header: {
       menuItem: fontStyle.yesGothicExtraBold,
     },
@@ -279,14 +287,20 @@ const darkMode = {
     navigation: {
       item: fontStyle.appleNeoBold,
     },
+    search: fontStyle.yesGothicMedium,
     component: {
       mainTitle: fontStyle.montserrat,
       itemTitle: fontStyle.nanumGothic,
       itemDescription: fontStyle.yesGothicMedium,
     },
-    search: fontStyle.yesGothicMedium,
     dynamicIsland: {
       stateView: fontStyle.yesGothicExtraBold,
+    },
+    button: {
+      default: fontStyle.appleNeoBold,
+    },
+    empty: {
+      title: fontStyle.koPubDotumBold,
     },
   },
 };
@@ -298,7 +312,6 @@ export type WindowSizeTypes = typeof windowSize;
 export type FlexLayoutTypes = typeof flexLayout;
 export type FontSizeTypes = typeof fontSize;
 export type ColorTypes = typeof colors;
-export type FontTypes = typeof fontStyle;
 export type BorderRadiusTypes = typeof borderRadius;
 
 const muiBase = createTheme();
@@ -308,7 +321,6 @@ const baseTheme = {
   deviceSize,
   windowSize,
   fontSize,
-  fontStyle,
   borderRadius,
 };
 

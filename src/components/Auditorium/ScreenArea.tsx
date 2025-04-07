@@ -268,7 +268,7 @@ const TagBox = styled.li<{ theme: Theme; isLive: boolean }>(
       : theme.colors.lightGray + OPACITY_35};
     color: ${isLive ? theme.colors.white : theme.mode.textPrimary};
     border-radius: ${theme.borderRadius.roundedBox};
-    font-family: ${theme.fontStyle.appleNeoBold};
+    font-family: ${theme.mode.font.button.default};
     white-space: nowrap;
     font-size: 18px;
     padding: 8px 26px; // 위아래 5px = 총 10px 더 크게

@@ -8,7 +8,12 @@ import { useWindowContext } from "../../Context/WindowContext";
 import { defaultTheme } from "../../styles/theme";
 import { useProportionHook } from "../../hooks/useWindowHooks";
 import { SCREEN_CONTAINER_PADDING } from "./ScreenArea";
-import { ASPECT_RATIO, HorizontalDivider } from "../layouts/Layouts";
+import {
+  ASPECT_RATIO,
+  HorizontalDivider,
+  ItemDescription,
+  ItemTitle,
+} from "../layouts/Layouts";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -123,13 +128,15 @@ export function RecommendArea(props: ActiveMenuStateType) {
                   )}
                 </Contents>
                 <ContentsDescriptionLine theme={theme}>
-                  <ContentsTitle theme={theme}>
+                  <ItemTitle theme={theme} fontSize={16} paddingBottom={0}>
                     {league.liveTitle}
-                  </ContentsTitle>
-                  <ChannelName theme={theme}>{league.channelName}</ChannelName>
-                  <ContentsDate theme={theme}>
+                  </ItemTitle>
+                  <StyledItemDescription theme={theme}>
+                    {league.channelName}
+                  </StyledItemDescription>
+                  <StyledItemDescription theme={theme}>
                     {iso8601ToYYMMDDHHMM(league.leagueDate)}
-                  </ContentsDate>
+                  </StyledItemDescription>
                 </ContentsDescriptionLine>
               </ContentsLine>
             ))
@@ -152,40 +159,18 @@ const StyledNavigation = styled(Navigation)`
   }
 `;
 
-const ContentsTitle = styled.h4<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-size: 15px;
-    font-family: ${theme.mode.font.component.itemTitle};
-    text-align: left;
-    margin: 0;
-    padding: 0 0 2px 0;
-  `,
-);
+const ContentsDescriptionLine = styled.div`
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+`;
 
-const ChannelName = styled.span<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-family: ${theme.fontStyle.appleNeoBold};
-    font-size: 14px;
-  `,
-);
-
-const ContentsDate = styled.span<{ theme: Theme }>(
-  ({ theme }) => css`
-    font-family: ${theme.fontStyle.koPubDotumBold};
-    font-weight: 500;
-    font-size: 12px;
-  `,
-);
-
-const ContentsDescriptionLine = styled.div<{ theme: Theme }>(
-  ({ theme }) => css`
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    box-sizing: border-box;
-    ${theme.flexLayout.column}
-  `,
-);
+const StyledItemDescription = styled(ItemDescription)`
+  font-size: 13px;
+`;
 
 const ContentsLine = styled.div<{ theme: Theme }>(
   ({ theme }) => css`

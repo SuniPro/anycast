@@ -62,8 +62,8 @@ export function RecommendArea(props: ActiveMenuStateType) {
 
   const navigationItemWidth = useProportionHook(
     windowWidth,
-    90,
-    defaultTheme.windowSize.HD,
+    110,
+    defaultTheme.windowSize.tablet,
   );
 
   const navigationContainer = useProportionHook(

@@ -42,29 +42,12 @@ export function HlsPlayer(props: HlsPlayerType) {
 
     if (Hls.isSupported()) {
       const hls = new Hls({
-        maxBufferLength: 20,
-        liveSyncDurationCount: 5, // 여유 있게 10초
-        liveMaxLatencyDurationCount: 20, // 최대 20초까지 허용
-        autoStartLoad: true,
+        maxBufferLength: 10, // 세그먼트 개수
+        liveSyncDurationCount: 3,
+        liveMaxLatencyDurationCount: 7,
+        maxMaxBufferLength: 30,
+        liveDurationInfinity: false,
         lowLatencyMode: true,
-      });
-
-      // ✅ 이벤트 로그 추가 부분
-      hls.on(Hls.Events.FRAG_LOADED, (_, data) => {
-        console.log("📦 TS 로드 완료:", data.frag.url);
-      });
-
-      hls.on(Hls.Events.BUFFER_APPENDED, () => {
-        console.log("💾 버퍼에 추가됨");
-      });
-
-      hls.on(Hls.Events.BUFFER_EOS, () => {
-        console.log("🔚 버퍼 끝 도달");
-      });
-
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.warn("⛔ [HLS] Buffer Stalled! 🚨", event);
-        console.warn("⛔ [HLS] Buffer Stalled! 🚨", data);
       });
 
       hls.loadSource(sourceUrl);

@@ -34,7 +34,6 @@ export function HlsPlayer(props: HlsPlayerType) {
     if (!videoRef.current || !autoPlay) return;
 
     const video = videoRef.current;
-
     const isExternal = hlsPath.includes("soop");
     const encodedUrl = encodeURIComponent(hlsPath);
     const sourceUrl = isExternal
@@ -42,18 +41,30 @@ export function HlsPlayer(props: HlsPlayerType) {
       : hlsPath;
 
     if (Hls.isSupported()) {
-      /**
-       * 최대 지연시간은 14초, 그리고 TS 조각의 평균 크기는 8초,
-       * 가장 최근 TS로 점프해버리는 문제 발생을 저지하기 위해
-       * liveMaxLatencyDurationCount는 20초로 설정하였음
-       * */
       const hls = new Hls({
-        maxBufferLength: 10,
-        maxMaxBufferLength: 30,
-        liveSyncDurationCount: 8,
-        liveMaxLatencyDurationCount: 20,
+        maxBufferLength: 20,
+        liveSyncDurationCount: 5, // 여유 있게 10초
+        liveMaxLatencyDurationCount: 20, // 최대 20초까지 허용
         autoStartLoad: true,
         lowLatencyMode: true,
+      });
+
+      // ✅ 이벤트 로그 추가 부분
+      hls.on(Hls.Events.FRAG_LOADED, (_, data) => {
+        console.log("📦 TS 로드 완료:", data.frag.url);
+      });
+
+      hls.on(Hls.Events.BUFFER_APPENDED, () => {
+        console.log("💾 버퍼에 추가됨");
+      });
+
+      hls.on(Hls.Events.BUFFER_EOS, () => {
+        console.log("🔚 버퍼 끝 도달");
+      });
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.warn("⛔ [HLS] Buffer Stalled! 🚨", event);
+        console.warn("⛔ [HLS] Buffer Stalled! 🚨", data);
       });
 
       hls.loadSource(sourceUrl);
@@ -67,7 +78,6 @@ export function HlsPlayer(props: HlsPlayerType) {
       };
     }
 
-    // HLS.js 지원 안될 때만 native HLS 사용 (예: Safari)
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = sourceUrl;
     }

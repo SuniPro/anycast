@@ -23,7 +23,6 @@ import {
 import { EmptyPage } from "../styled/Empty/Empty";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { ThumbnailViewer } from "../Video/ThumbnailViewer";
-import { HlsPlayer } from "../Video/HlsPlayer";
 import { useCursor } from "../../Context/CursorContext";
 
 const NAVIGATION_PADDING = 10;
@@ -107,25 +106,14 @@ export function RecommendArea(props: ActiveMenuStateType) {
                   height={contentsHeight}
                   theme={theme}
                 >
-                  {league.sportsTypeSub === "BJLOL" ? (
-                    <HlsPlayer
-                      hlsPath={league.streamUrl}
-                      hlsPathSub={league.streamUrl}
-                      width={contentsWidth}
-                      height={contentsHeight}
-                      muted={true}
-                      controls={false}
-                    />
-                  ) : (
-                    <ThumbnailViewer
-                      hlsPath={league.streamUrl}
-                      width={contentsWidth}
-                      height={contentsHeight}
-                      muted={true}
-                      controls={false}
-                      hlsPathSub={league.streamUrl}
-                    />
-                  )}
+                  <ThumbnailViewer
+                    hlsPath={league.streamUrl}
+                    width={contentsWidth}
+                    height={contentsHeight}
+                    muted={true}
+                    controls={false}
+                    hlsPathSub={league.streamUrl}
+                  />
                 </Contents>
                 <ContentsDescriptionLine theme={theme}>
                   <ItemTitle theme={theme} fontSize={16} paddingBottom={0}>

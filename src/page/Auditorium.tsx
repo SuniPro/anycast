@@ -5,9 +5,12 @@ import { getSportsStreamById } from "../api/streaming";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SportsLeagueType } from "../model/Streams";
 import { useEffect, useState } from "react";
-import { ErrorAlert, SuccessAlert } from "../components/Alert/Alerts";
+import { ErrorAlert } from "../components/Alert/Alerts";
 import { useTheme } from "@emotion/react";
 
+/** 극장모드로 영상을 시청할 수 있는 컴포넌트입니다.
+ * useParam 을 통해 id 를 받아 해당 아이디를 가진 영상 주소를 서버에 요청합니다.
+ * */
 export function Auditorium() {
   const { windowWidth } = useWindowContext();
   const theme = useTheme();
@@ -25,11 +28,6 @@ export function Auditorium() {
         setLeagueInfo(r);
       }
     });
-    if (leagueInfo?.streamUrl.includes("soop")) {
-      SuccessAlert(
-        `SOOP은 현재 서버가 불안정하여 약 1분간 잦은 버퍼링이 발생할 수 있습니다. \n 1분 후 정상 재생되니 이점 참고 바랍니다.`,
-      );
-    }
   }, [id, leagueInfo?.streamUrl, location, navigate]);
 
   if (!leagueInfo) return;

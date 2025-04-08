@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 import { ErrorAlert } from "../components/Alert/Alerts";
 import { useTheme } from "@emotion/react";
 
+/** 극장모드로 영상을 시청할 수 있는 컴포넌트입니다.
+ * useParam 을 통해 id 를 받아 해당 아이디를 가진 영상 주소를 서버에 요청합니다.
+ * */
 export function Auditorium() {
   const { windowWidth } = useWindowContext();
   const theme = useTheme();

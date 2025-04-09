@@ -230,7 +230,7 @@ function ContentsArea(props: {
           height={itemHeight + (isMobile ? ITEM_GAP : 0)}
           muted={true}
           autoPlay={selectedIndex === index}
-          controls={true}
+          controls={false}
         />
       );
     }

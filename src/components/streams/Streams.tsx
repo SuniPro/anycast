@@ -33,9 +33,9 @@ import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { EmptyPage } from "../styled/Empty/Empty";
 import Tooltip from "@mui/material/Tooltip";
 import { useSearchContext } from "../../Context/SearchContext";
-import { useCursor } from "../../Context/CursorContext";
 import { ThumbnailViewer } from "../Video/ThumbnailViewer";
 import { HlsPlayer } from "../Video/HlsPlayer";
+import { YoutubePlayer } from "../Video/Youtube";
 
 const MOVE_FACTOR = 2;
 const ITEM_GAP = 12;
@@ -207,8 +207,34 @@ function ContentsArea(props: {
   const isMobile = windowWidth <= theme.windowSize.mobile;
   const isPhone = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  const { setIsPointer } = useCursor();
   const navigate = useNavigate();
+
+  const isYoutube = (league: SportsLeagueType, index: number) => {
+    if (league.streamUrl.includes("youtube")) {
+      return (
+        <YoutubePlayer
+          path={league.streamUrl}
+          width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+          height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+          autoPlay={selectedIndex === index}
+          muted={true}
+          controls={false}
+        />
+      );
+    } else {
+      return (
+        <HlsPlayer
+          hlsPath={league.streamUrl}
+          hlsPathSub={league.streamUrl}
+          width={itemWidth + (isMobile ? ITEM_GAP : 0)}
+          height={itemHeight + (isMobile ? ITEM_GAP : 0)}
+          muted={true}
+          autoPlay={selectedIndex === index}
+          controls={true}
+        />
+      );
+    }
+  };
 
   return (
     <VisualItemContainer
@@ -222,28 +248,33 @@ function ContentsArea(props: {
       ) : (
         leagueList.map((league, index) => (
           <Tooltip
+            key={league.id}
             title="제목을 누르면 극장모드로 볼 수 있어요 !"
             placement="top"
           >
             <ItemCase theme={theme}>
               <StyledItem
-                key={league.id}
                 width={itemWidth}
                 isMain={activeScroll}
-                onMouseEnter={() => setSelectedItem(index)}
-                onMouseLeave={() => setSelectedItem(null)}
+                onMouseEnter={() => {
+                  setSelectedItem(index);
+                }}
+                onMouseLeave={() => {
+                  setSelectedItem(null);
+                }}
                 theme={theme}
               >
-                {(!isPhone && selectedIndex === index) ||
-                league.streamUrlSub === "BJLOL" ? (
-                  <HlsPlayer
-                    hlsPath={league.streamUrl}
-                    hlsPathSub={league.streamUrl}
+                {!isPhone &&
+                (selectedIndex === index || league.streamUrlSub === "BJLOL") ? (
+                  isYoutube(league, index)
+                ) : league.streamUrl.includes("youtube") ? (
+                  <YoutubePlayer
+                    path={league.streamUrl}
                     width={itemWidth + (isMobile ? ITEM_GAP : 0)}
                     height={itemHeight + (isMobile ? ITEM_GAP : 0)}
-                    muted={true}
                     autoPlay={selectedIndex === index}
-                    controls={true}
+                    muted={true}
+                    controls={false}
                   />
                 ) : (
                   <ThumbnailViewer
@@ -257,8 +288,6 @@ function ContentsArea(props: {
                 )}
               </StyledItem>
               <DescriptionLine
-                onMouseEnter={() => setIsPointer(true)}
-                onMouseLeave={() => setIsPointer(false)}
                 onClick={() => navigate(`auditorium/${league.id}`)}
                 theme={theme}
               >
@@ -273,10 +302,7 @@ function ContentsArea(props: {
                             league.sportsTypeSub,
                           )
                     }
-                    size={{
-                      width: 40,
-                      height: 40,
-                    }}
+                    size={{ width: 40, height: 40 }}
                     theme={theme}
                   />
                 </ProfileCase>

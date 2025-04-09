@@ -17,6 +17,7 @@ import { LikeButton } from "../comunity/rank/LikeButton";
 import { useCursor } from "../../Context/CursorContext";
 import { OPACITY_35 } from "../../styles/theme";
 import { useDarkMode } from "usehooks-ts";
+import { YoutubePlayer } from "../Video/Youtube";
 
 const SECTION_GAP = 20;
 export const SCREEN_CONTAINER_PADDING = 30;
@@ -120,16 +121,27 @@ function Screen(props: {
   return (
     <>
       <ScreenBezel width={screenW} height={screenH} theme={theme}>
-        <StyledHlsPlayer
-          hlsPath={streamUrl}
-          hlsPathSub={streamUrl}
-          width={screenW}
-          height={screenH}
-          autoPlay={true}
-          muted={false}
-          controls={true}
-          theme={theme}
-        />
+        {streamUrl.includes("youtube") ? (
+          <YoutubePlayer
+            path={streamUrl}
+            width={screenW}
+            height={screenH}
+            muted={false}
+            autoPlay={true}
+            controls={true}
+          />
+        ) : (
+          <StyledHlsPlayer
+            hlsPath={streamUrl}
+            hlsPathSub={streamUrl}
+            width={screenW}
+            height={screenH}
+            autoPlay={true}
+            muted={false}
+            controls={true}
+            theme={theme}
+          />
+        )}
       </ScreenBezel>
     </>
   );

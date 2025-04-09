@@ -24,6 +24,7 @@ import { EmptyPage } from "../styled/Empty/Empty";
 import { iso8601ToYYMMDDHHMM } from "../styled/Date/DateFomatter";
 import { ThumbnailViewer } from "../Video/ThumbnailViewer";
 import { useCursor } from "../../Context/CursorContext";
+import { YoutubePlayer } from "../Video/Youtube";
 
 const NAVIGATION_PADDING = 10;
 
@@ -106,14 +107,27 @@ export function RecommendArea(props: ActiveMenuStateType) {
                   height={contentsHeight}
                   theme={theme}
                 >
-                  <ThumbnailViewer
-                    hlsPath={league.streamUrl}
-                    width={contentsWidth}
-                    height={contentsHeight}
-                    muted={true}
-                    controls={false}
-                    hlsPathSub={league.streamUrl}
-                  />
+                  {league.streamUrl.includes("youtube") ? (
+                    <StyledYoutubePlayer
+                      path={league.streamUrl}
+                      width={contentsWidth}
+                      height={contentsHeight}
+                      autoPlay={false}
+                      muted={true}
+                      controls={false}
+                      coverWidth={contentsWidth}
+                      coverHeight={contentsHeight}
+                    />
+                  ) : (
+                    <ThumbnailViewer
+                      hlsPath={league.streamUrl}
+                      width={contentsWidth}
+                      height={contentsHeight}
+                      muted={true}
+                      controls={false}
+                      hlsPathSub={league.streamUrl}
+                    />
+                  )}
                 </Contents>
                 <ContentsDescriptionLine theme={theme}>
                   <ItemTitle theme={theme} fontSize={16} paddingBottom={0}>
@@ -226,6 +240,27 @@ const RecommendLine = styled.section<{
     @media ${theme.deviceSize.phone} {
       width: 100%;
       height: 100%;
+    }
+  `,
+);
+
+const StyledYoutubePlayer = styled(YoutubePlayer)<{
+  coverWidth: number;
+  coverHeight: number;
+}>(
+  ({ width, height }) => css`
+    position: relative;
+    pointer-events: none;
+    cursor: default;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: ${width}px;
+      height: ${height}px;
+      pointer-events: auto;
     }
   `,
 );

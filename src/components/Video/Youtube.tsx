@@ -1,5 +1,5 @@
-import { useState } from "react";
 import YouTube, { YouTubeEvent } from "react-youtube";
+import { useCursor } from "../../Context/CursorContext";
 
 interface YouTubeOptionsType {
   width: number;
@@ -15,26 +15,65 @@ interface YouTubeOptionsType {
 }
 
 export function YoutubePlayer(props: {
-  videoId: string;
+  className?: string;
   opts?: YouTubeOptionsType;
+  path: string;
+  width: number;
+  height: number;
+  muted: boolean;
+  controls: boolean;
+  autoPlay?: boolean;
 }) {
-  const { videoId, opts } = props;
-  const [videoKey, setVideoKey] = useState(0);
+  const {
+    className,
+    path,
+    width,
+    height,
+    muted,
+    controls,
+    autoPlay = false,
+  } = props;
+  const { setIsVideo } = useCursor();
+  const mute = muted ? 1 : 0;
+
+  const settingOption: YouTubeOptionsType = {
+    width,
+    height,
+    playerVars: {
+      rel: 0,
+      showinfo: 0,
+      mute,
+      autoplay: autoPlay ? 1 : 0,
+      loop: 1,
+      controls: controls ? 1 : 0,
+    },
+  };
 
   const handleStateChange = (event: YouTubeEvent<number>) => {
-    // `event.data === 0` : 영상 종료됨
-    // `event.data === 2` : 영상 일시정지됨
-    if (event.data === 0 || event.data === 2) {
-      setVideoKey((prev) => prev + 1);
+    if (autoPlay) {
+      event.data = 1;
+    } else {
+      event.data = 0;
     }
   };
 
+  let urlParams;
+  urlParams = new URLSearchParams(new URL(path).search);
+  const videoId = urlParams.get("v");
+
+  if (!videoId) return;
+
   return (
-    <YouTube
-      key={videoKey} // ✅ `key`가 변경되면 React가 컴포넌트를 다시 렌더링함
-      videoId={videoId}
-      opts={opts}
-      onStateChange={handleStateChange} // ✅ 재생 상태 감지
-    />
+    <div
+      className={className}
+      onMouseEnter={() => setIsVideo(true)}
+      onMouseLeave={() => setIsVideo(false)}
+    >
+      <YouTube
+        videoId={videoId}
+        opts={settingOption}
+        onStateChange={handleStateChange} // ✅ 재생 상태 감지
+      />
+    </div>
   );
 }

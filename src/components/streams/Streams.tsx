@@ -11,13 +11,13 @@ import {
   ASPECT_RATIO,
   ControlBox,
   DescriptionLine,
+  EllipsisCase,
   ExhibitionContainer,
   InfoLine,
   Item,
   ItemCase,
   ItemContainer,
   ItemDescription,
-  ItemTitle,
   MainTitle,
   MainTitleLine,
   Profile,
@@ -307,13 +307,13 @@ function ContentsArea(props: {
                   />
                 </ProfileCase>
                 <InfoLine>
-                  <ItemTitle
-                    theme={theme}
+                  <StyledEllipsisCase
+                    text={league.liveTitle}
+                    testAlign="left"
                     fontSize={isMobile ? 15 : 18}
-                    paddingBottom={0}
-                  >
-                    {league.liveTitle}
-                  </ItemTitle>
+                    width={itemWidth + (isMobile ? ITEM_GAP : 0) - 50}
+                    theme={theme}
+                  />
                   <ItemDescription theme={theme}>
                     {league.channelName}
                   </ItemDescription>
@@ -333,5 +333,18 @@ function ContentsArea(props: {
 const VisualItemContainer = styled(ItemContainer)<{ isView: boolean }>(
   ({ isView }) => css`
     visibility: ${isView ? "visible" : "hidden"};
+  `,
+);
+
+const StyledEllipsisCase = styled(EllipsisCase)<{
+  theme: Theme;
+  fontSize: number;
+}>(
+  ({ theme, fontSize }) => css`
+    font-size: ${fontSize};
+    font-family: ${theme.mode.font.component.itemTitle};
+    font-weight: 800;
+    margin: 0;
+    padding: 0;
   `,
 );

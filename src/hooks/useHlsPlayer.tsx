@@ -61,11 +61,11 @@ export function useHlsPlayer(
       }
     } else {
       const hls = new Hls({
-        lowLatencyMode: mode === "default",
-        backBufferLength: 60,
-        maxBufferLength: 30,
-        liveSyncDurationCount: 5,
-        liveMaxLatencyDurationCount: 10,
+        lowLatencyMode: mode === "default", // ❗ lowLatencyMode는 false여야 함 (soop에서)
+        backBufferLength: 60, // 뒤로 1분까지 캐시
+        maxBufferLength: 45, // 최대 버퍼 확보량 45초
+        liveSyncDurationCount: 5, // 엣지에서 10초(2s segment 기준) 뒤에서 재생
+        liveMaxLatencyDurationCount: 12, // 최대 허용 지연 24초
         autoStartLoad: true,
       });
 
@@ -76,7 +76,7 @@ export function useHlsPlayer(
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           const liveEdge =
             hls.liveSyncPosition || videoEl.duration - videoEl.currentTime || 0;
-          hls.startLoad(Math.max(0, liveEdge - 12));
+          hls.startLoad(Math.max(0, liveEdge - 20));
         });
       }
 

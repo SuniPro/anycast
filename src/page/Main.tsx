@@ -63,7 +63,7 @@ export function Main() {
   return (
     <Wrapper theme={theme}>
       <PageWrapper
-        width={isMobile ? windowWidth : windowWidth - 100}
+        width={isMobile ? windowWidth : windowWidth * 0.95}
         gap={0}
         theme={theme}
       >
@@ -113,5 +113,6 @@ const Wrapper = styled.section<{ theme: Theme }>(
 );
 
 const StyledComponentContainer = styled(ComponentContainer)`
+  overflow: hidden;
   gap: 40px;
 `;

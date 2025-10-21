@@ -117,8 +117,8 @@ export function Navigation(props: NavigationPropsType) {
         {/*  <Divider />*/}
         {/*</SummaryTab>*/}
         <ActivityNavigation>
-          {menuList.map((row, index) => (
-            <React.Fragment key={index}>
+          {menuList.map((row) => (
+            <React.Fragment key={row.menu}>
               <NavigationFuncItem
                 isActive={activeMenu === row.menu}
                 func={() => setActiveMenu(row.menu as SPORTS_TYPE)}

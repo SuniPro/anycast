@@ -10,6 +10,7 @@ export default defineConfig({
       // 첫 번째 프록시 설정
       "/streaming": {
         target: "http://13.214.147.245:8070",
+        // target: "http://localhost:8070",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/streaming/, ""),
         secure: false,

@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker buildx build --platform linux/amd64 -t perasperaadastra250225/anycast-client:1.0.0 --push .
+          docker buildx build --platform linux/amd64 -t sosunhyeun/anycast-client:1.0.0 --push .
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker pull perasperaadastra250225/anycast-client:1.0.0
+            docker pull sosunhyeun/anycast-client:1.0.0
             docker stop anycast-client || true
             docker rm anycast-client || true
             docker run -d \
@@ -46,4 +46,4 @@ jobs:
               -v /etc/ssl/anycast:/etc/ssl/anycast:ro \
               --restart unless-stopped \
               --name anycast-client \
-              perasperaadastra250225/anycast-client:1.0.0
+              sosunhyeun/anycast-client:1.0.0
